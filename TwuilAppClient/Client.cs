@@ -5,16 +5,17 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using TwuilAppLib.Data;
+using TwuilAppLib.Interface;
 
 namespace TwuilAppClient
 {
-    public class Client
+    public class Client : StateContext<ClientState> 
     {
         TcpClient client;
         Stream stream;
         private byte[] receiveBuffer;
 
-        
+        public ClientState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public Client()
         {
@@ -23,9 +24,15 @@ namespace TwuilAppClient
             this.stream.BeginRead(this.receiveBuffer, 0, 1024, OnBytesReceived, null);
         }
 
-        public void Send(string message)
+        public void Send(DAbstract data)
         {
-            byte[] buffer = Encoding.ASCII.GetBytes(message);
+            DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+            {
+                type = data.GetType().Name,
+                data = data
+            };
+
+            byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
             this.stream.Write(buffer);
         }
 
