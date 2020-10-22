@@ -6,6 +6,29 @@ using System.Text;
 
 namespace TwuilAppLib.Data
 {
+
+    public struct PacketFlags
+    {
+        private byte flagByte;
+
+        public PacketFlags(byte flagByte)
+        {
+            this.flagByte = flagByte;
+        }
+
+        public bool IsEncrypted
+        {
+            get => (flagByte & (0x1 << 0)) > 0;
+            set
+            {
+                if (value) flagByte |= (0x1 << 0);
+                else flagByte &= 0xFF ^ (0x1 << 0);
+            }
+        }
+
+        public byte Result() => flagByte;
+    }
+
     public class DNetworkPacket : DAbstract
     {
         public string type;

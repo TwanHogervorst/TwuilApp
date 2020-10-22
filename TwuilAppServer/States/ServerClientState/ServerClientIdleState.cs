@@ -8,9 +8,9 @@ namespace TwuilAppServer.States
     public class ServerClientIdleState : IServerClientState
     {
 
-        private StateContext<IServerClientState> context;
+        private IStateContext<IServerClientState> context;
 
-        public ServerClientIdleState(StateContext<IServerClientState> context)
+        public ServerClientIdleState(IStateContext<IServerClientState> context)
         {
             this.context = context;
         }

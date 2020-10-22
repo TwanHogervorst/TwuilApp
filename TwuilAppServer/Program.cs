@@ -1,4 +1,5 @@
 ﻿using System;
+using TwuilAppLib.Data;
 
 namespace TwuilAppServer
 {
@@ -6,7 +7,9 @@ namespace TwuilAppServer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            //Server server = new Server(Constants.SERVER_PORT);
+
+            while (Console.ReadLine().ToLower() != "quit") { }
         }
     }
 }

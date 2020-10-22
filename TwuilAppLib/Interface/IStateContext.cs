@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TwuilAppLib.Interface
 {
-    public interface StateContext<T>
+    public interface IStateContext<T>
     {
 
         T State { get; }

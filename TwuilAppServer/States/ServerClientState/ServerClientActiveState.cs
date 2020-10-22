@@ -8,10 +8,10 @@ namespace TwuilAppServer.States
     class ServerClientActiveState
     {
 
-        private StateContext<IServerClientState> context;
+        private IStateContext<IServerClientState> context;
         private Server server;
 
-        public ServerClientActiveState(StateContext<IServerClientState> context, Server server)
+        public ServerClientActiveState(IStateContext<IServerClientState> context, Server server)
         {
             this.context = context;
             this.server = server;
