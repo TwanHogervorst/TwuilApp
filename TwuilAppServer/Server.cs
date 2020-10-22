@@ -17,6 +17,7 @@ namespace TwuilAppServer
         public Server(ushort port)
         {
             this.listener = new TcpListener(IPAddress.Loopback, port);
+            this.listener.Start();
             this.listener.BeginAcceptTcpClient(this.OnClientAccepted, null);
         }
 
