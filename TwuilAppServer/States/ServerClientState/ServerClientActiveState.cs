@@ -5,13 +5,15 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppServer.States
 {
-    class ServerClientActiveState
+    class ServerClientActiveState : IServerClientState
     {
 
-        private IStateContext<IServerClientState> context;
+        public string Username { get; }
+
+        private ServerClient context;
         private Server server;
 
-        public ServerClientActiveState(IStateContext<IServerClientState> context, Server server)
+        public ServerClientActiveState(ServerClient context, Server server, string Username)
         {
             this.context = context;
             this.server = server;

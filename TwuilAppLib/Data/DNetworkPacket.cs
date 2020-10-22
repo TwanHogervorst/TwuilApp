@@ -45,6 +45,12 @@ namespace TwuilAppLib.Data
         }
     }
 
+    public abstract class DNetworkResponsePacket : DAbstract
+    {
+        public ResponsePacketStatus status;
+        public string errorMessage;
+    }
+
     public class DNetworkPacket<T> : DAbstract where T : DAbstract
     {
         public string type;
@@ -57,10 +63,21 @@ namespace TwuilAppLib.Data
         public string password;
     }
 
+    public class DLoginResponsePacket : DNetworkResponsePacket
+    {
+
+    }
+
     public class DMessagePacket : DAbstract
     {
         public string sender;
         public string receiver;
         public string message;
+    }
+
+    public enum ResponsePacketStatus
+    {
+        Success,
+        Error
     }
 }

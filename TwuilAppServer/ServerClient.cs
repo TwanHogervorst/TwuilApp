@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Bson;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -9,13 +10,15 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using TwuilAppLib.Core;
 using TwuilAppLib.Data;
+using TwuilAppLib.Interface;
+using TwuilAppServer.States;
 
 namespace TwuilAppServer
 {
-    public class ServerClient
+    public class ServerClient : IStateContext<IServerClientState>
     {
 
-        public string UserName { get; private set; }
+        public string Username => this.State.Username;
 
         private Server server;
 
@@ -27,6 +30,8 @@ namespace TwuilAppServer
         private bool receivePacketHeader;
 
         public bool IsActive { get; private set; }
+
+        public IServerClientState State { get; private set; }
 
         public ServerClient(TcpClient client, Server server)
         {
@@ -40,11 +45,33 @@ namespace TwuilAppServer
             this.receivePacketHeader = true;
 
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+
+            this.State = new ServerClientIdleState(this);
         }
 
         public void Send(DNetworkPacket<DAbstract> data)
         {
 
+        }
+
+        public void SetState(IServerClientState newState)
+        {
+            this.State = newState;
+        }
+
+        public void SetState(Type newStateType)
+        {
+            if(newStateType.IsAssignableFrom(typeof(IServerClientState)))
+            {
+                if(newStateType == typeof(ServerClientActiveState))
+                {
+                    this.State = new ServerClientActiveState(this, this.server, this.State.Username);
+                }
+                else
+                {
+                    this.State = Activator.CreateInstance(newStateType) as IServerClientState;
+                }
+            }
         }
 
         private void OnBytesReceived(IAsyncResult result)
@@ -105,10 +132,15 @@ namespace TwuilAppServer
         private void OnDataReceived(DNetworkPacket packetRaw)
         {
             Console.WriteLine($"Got packet of type: {packetRaw.type}");
-
             
             switch(packetRaw.type)
             {
+                case nameof(DLoginPacket):
+                    {
+                        DNetworkPacket<DLoginPacket> packet = packetRaw.DataAsType<DLoginPacket>();
+                        this.Login(packet.data.username, packet.data.password);
+                    }
+                    break;
                 case nameof(DMessagePacket):
                     {
                         DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
@@ -118,5 +150,10 @@ namespace TwuilAppServer
             }
         }
 
+        private void Login(string username, string password)
+        {
+            this.State.Login(username, password);
+        }
+        
     }
 }
