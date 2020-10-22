@@ -2,8 +2,113 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TwuilApp"
-             StartupUri="MainWindow.xaml">
+             StartupUri="LoginWindow.xaml">
     <Application.Resources>
-         
+        
+        <Style x:Key="loginWindowStyle" TargetType="Window">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <ImageBrush ImageSource="pack://application:,,,/Resources/twuillappbackground.jpg"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TitleControlStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#aaa"/>
+            <Setter Property="FontSize" Value="60"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0.20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SignInTitleControlStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#aaa"/>
+            <Setter Property="FontSize" Value="40"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0.20"/>
+            <Setter Property="TextDecorations">
+                <Setter.Value>
+                    <TextDecorationCollection>
+                        <TextDecoration Location="Underline">
+                            <TextDecoration.Pen>
+                                <Pen Thickness="1.7" Brush="#aaa"/>
+                            </TextDecoration.Pen>
+                        </TextDecoration>
+                    </TextDecorationCollection>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="LabelControlStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#aaa"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Margin" Value="0,25,0,0"/>
+            <Setter Property="Padding" Value="0,0,0,2"/>
+        </Style>
+
+        <Style x:Key="InputControlStyle">
+            <Setter Property="Control.Foreground" Value="White"/>
+            <Setter Property="Control.FontSize" Value="20"/>
+            <Setter Property="Control.Height" Value="40"/>
+            <Setter Property="Control.Width" Value="350"/>
+            <Setter Property="Control.BorderBrush" Value="#fff"/>
+            <Setter Property="Control.Padding" Value="5,5,0,0"/>
+            <Setter Property="Control.Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="#fff" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Control.IsFocused" Value="True">
+                    <Setter Property="Control.BorderBrush" Value="white"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="ButtonSignStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="15,20"/>
+            <Setter Property="Margin" Value="0,25,0,15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Background="#FF3B3B3B">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ButtonPasswordStyle" TargetType="Button">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,25,0,15"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>
