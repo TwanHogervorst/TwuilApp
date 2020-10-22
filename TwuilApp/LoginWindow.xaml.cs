@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -32,23 +33,101 @@ namespace TwuilApp
             string username = this.UsernameTextBox.Text;
             string password = this.PasswordTextBox.Password;
 
+            bool input = true;
+            if (input && string.IsNullOrEmpty(ip))
+            {
+                input = false;
+                this.ShowError("Please enter an ip address!");
+            }
+            if (input && string.IsNullOrEmpty(username))
+            {
+                input = false;
+                this.ShowError("Please enter an username!");
+            }
+            if (input && string.IsNullOrEmpty(password))
+            {
+                input = false;
+                this.ShowError("Please enter a password!");
+            }
+            if(input && !IPAddress.TryParse(ip, out IPAddress dummy))
+            {
+                input = false;
+                this.ShowError("Please enter a valid ip address!");
+            }
+
             try
             {
-                if (this.client != null)
+                if (input)
                 {
-                    this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
-                    this.client.OnServerClosing -= this.Client_OnServerClosing;
-                    this.client.Dispose();
+                    if (this.client != null)
+                    {
+                        this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
+                        this.client.OnServerClosing -= this.Client_OnServerClosing;
+                        this.client.Dispose();
+                    }
+
+                    this.client = new Client(ip, Constants.SERVER_PORT);
+
+                    this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
+                    this.client.OnServerClosing += Client_OnServerClosing;
+
+                    this.client.Login(username, password);
                 }
-
-                this.client = new Client(ip, Constants.SERVER_PORT);
-
-                this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
-                this.client.OnServerClosing += Client_OnServerClosing;
-
-                this.client.Login(username, password);
             }
-            catch (Exception ex)
+            catch
+            {
+                this.ShowError($"Something went wrong while connecting to the server.");
+            }
+        }
+
+        private void SignUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            string ip = this.ServerIpTextBox.Text;
+            string username = this.UsernameTextBox.Text;
+            string password = this.PasswordTextBox.Password;
+
+            bool input = true;
+            if (input && string.IsNullOrEmpty(ip))
+            {
+                input = false;
+                this.ShowError("Please enter an ip address!");
+            }
+            if (input && string.IsNullOrEmpty(username))
+            {
+                input = false;
+                this.ShowError("Please enter an username!");
+            }
+            if (input && string.IsNullOrEmpty(password))
+            {
+                input = false;
+                this.ShowError("Please enter a password!");
+            }
+            if (input && !IPAddress.TryParse(ip, out IPAddress dummy))
+            {
+                input = false;
+                this.ShowError("Please enter a valid ip address!");
+            }
+
+            try
+            {
+                if (input)
+                {
+                    if (this.client != null)
+                    {
+                        this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
+                        this.client.OnServerClosing -= this.Client_OnServerClosing;
+                        this.client.Dispose();
+                    }
+
+                    this.client = new Client(ip, Constants.SERVER_PORT);
+
+                    this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
+                    this.client.OnServerClosing += Client_OnServerClosing;
+
+                    this.client.SignUp(username, password);
+                }
+            }
+            catch
             {
                 this.ShowError($"Something went wrong while connecting to the server.");
             }
@@ -84,34 +163,6 @@ namespace TwuilApp
                 this.ErrorMessageContentControl.Content = message;
                 this.ErrorMessageLabel.Visibility = Visibility.Visible;
             });
-        }
-
-        private void SignUpButton_Click(object sender, RoutedEventArgs e)
-        {
-            string ip = this.ServerIpTextBox.Text;
-            string username = this.UsernameTextBox.Text;
-            string password = this.PasswordTextBox.Password;
-
-            try
-            {
-                if(this.client != null)
-                {
-                    this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
-                    this.client.OnServerClosing -= this.Client_OnServerClosing;
-                    this.client.Dispose();
-                }
-
-                this.client = new Client(ip, Constants.SERVER_PORT);
-
-                this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
-                this.client.OnServerClosing += Client_OnServerClosing;
-
-                this.client.SignUp(username, password);
-            }
-            catch (Exception ex)
-            {
-                this.ShowError($"Something went wrong while connecting to the server.");
-            }
         }
     }
 }

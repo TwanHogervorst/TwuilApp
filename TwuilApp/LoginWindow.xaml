@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
         Title="TwuillApp" Height="Auto" Width="500"
+        SizeToContent="Height"
         Style="{StaticResource LoginWindowStyle}"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" AllowsTransparency="False">
     <Grid HorizontalAlignment="Center">
@@ -48,7 +49,7 @@
         <Separator Grid.Row="11"/>
 
         <!--<Button Grid.Row="11" Style="{StaticResource ButtonPasswordStyle}">Forgot Password?</Button>-->
-        <Label Grid.Row="12" Style="{StaticResource ErrorBoxStyle}" Visibility="Visible" Name="ErrorMessageLabel">
+        <Label Grid.Row="12" Style="{StaticResource ErrorBoxStyle}" Visibility="Hidden" Name="ErrorMessageLabel">
             <Viewbox StretchDirection="DownOnly" Stretch="Uniform">
                 <ContentControl Name="ErrorMessageContentControl"/>
             </Viewbox>
