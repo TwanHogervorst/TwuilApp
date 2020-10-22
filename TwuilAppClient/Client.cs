@@ -16,6 +16,7 @@ namespace TwuilAppClient
         TcpClient client;
         Stream stream;
         private byte[] receiveBuffer;
+        public string Username;
 
         public ClientState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -62,6 +63,12 @@ namespace TwuilAppClient
         private void OnDataReceived(DNetworkPacket data)
         {
 
+        }
+
+        public void Login(string username, string password)
+        {
+            this.Username = username;
+            this.State.Login(username, password);
         }
 
         public event MessageReceived OnMessageReceived;
