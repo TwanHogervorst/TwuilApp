@@ -14,6 +14,9 @@ namespace TwuilAppLib.Data
         public PacketFlags(byte flagByte)
         {
             this.flagByte = flagByte;
+
+            // defaults
+            this.IsEncrypted = false;
         }
 
         public bool IsEncrypted

@@ -41,6 +41,8 @@ namespace TwuilAppServer.States
                 response.errorMessage = "Username and/or password is incorrect.";
             }
 
+            this.context.Send(response);
+
             return result;
         }
 

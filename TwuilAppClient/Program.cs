@@ -14,15 +14,22 @@ namespace TwuilAppClient
 
             Console.WriteLine("Client Connected!");
 
-            client.Send(new DLoginPacket { username = "test", password = "test" });
+            client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
+
+            client.Send(new DLoginPacket { username = "test", password = "henk" });
 
             Console.WriteLine("Login Send!");
 
-            client.Send(new DMessagePacket { sender = "test", receiver = "test2", message = "Niggah" });
+            /*client.Send(new DMessagePacket { sender = "test", receiver = "test2", message = "Niggah" });
 
-            Console.WriteLine("Message Send!");
+            Console.WriteLine("Message Send!");*/
 
             while (Console.ReadLine().ToLower() != "quit") { }
+        }
+
+        private static void Client_OnLoginResponseReceived(Client sender, bool success, string errorMessage)
+        {
+            Console.WriteLine($"Login => success={success}; errorMessage={errorMessage ?? "NULL"}");
         }
     }
 }

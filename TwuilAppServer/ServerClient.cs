@@ -40,18 +40,39 @@ namespace TwuilAppServer
 
             this.stream = this.client.GetStream();
 
+            this.State = new ServerClientIdleState(this);
+
             this.receivedBytes = 0;
             this.receiveBuffer = new byte[6];
             this.receivePacketHeader = true;
 
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
-
-            this.State = new ServerClientIdleState(this);
         }
 
-        public void Send(DNetworkPacket<DAbstract> data)
+        public void Send(DAbstract data)
         {
+            DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+            {
+                type = data.GetType().Name,
+                data = data
+            };
 
+            byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
+            this.stream.Write(new byte[]
+            {
+                0x69
+            });
+            this.stream.Write(BitConverter.GetBytes(buffer.Length));
+            this.stream.Write(new byte[]{
+                new PacketFlags().Result()
+            });
+            this.stream.Write(buffer);
+            this.stream.Write(new byte[]
+            {
+                Utility.CalculateChecksum(buffer)
+            });
+
+            this.stream.FlushAsync();
         }
 
         public void SetState(IServerClientState newState)

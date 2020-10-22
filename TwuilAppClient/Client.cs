@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -12,21 +13,32 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppClient
 {
-    public class Client : IStateContext<ClientState> 
+    public class Client : IStateContext<IClientState> 
     {
-        TcpClient client;
-        Stream stream;
-        private byte[] receiveBuffer;
+        private TcpClient client;
+        private Stream stream;
 
-        public ClientState State { get => throw new NotImplementedException(); }
+        private int receivedBytes;
+        private byte[] receiveBuffer;
+        private bool receivePacketHeader;
+
+        public IClientState State { get; private set; }
+
+        public event MessageReceived OnPrivateMessageReceived;
+        public event LoginResponseReceived OnLoginResponseReceived;
 
         public Client()
         {
             this.client = new TcpClient(IPAddress.Loopback.ToString(), 42069);
             this.stream = this.client.GetStream();
 
-            this.receiveBuffer = new byte[1024];
-            this.stream.BeginRead(this.receiveBuffer, 0, 1024, OnBytesReceived, null);
+            this.State = new ClientIdleState(this);
+
+            this.receivedBytes = 0;
+            this.receiveBuffer = new byte[6];
+            this.receivePacketHeader = true;
+
+            this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
         }
 
         public void Send(DAbstract data)
@@ -44,7 +56,7 @@ namespace TwuilAppClient
             });
             this.stream.Write(BitConverter.GetBytes(buffer.Length));
             this.stream.Write(new byte[]{
-                0x00
+                new PacketFlags().Result()
             });
             this.stream.Write(buffer);
             this.stream.Write(new byte[]
@@ -57,30 +69,90 @@ namespace TwuilAppClient
 
         private void OnBytesReceived(IAsyncResult result)
         {
-            int receiveBytes = this.stream.EndRead(result);
-            int length = BitConverter.ToInt32(this.receiveBuffer.Skip(1).Take(4).ToArray());
-            String message = BitConverter.ToString(this.receiveBuffer.Skip(6).Take(length).ToArray());
-            this.stream.BeginRead(this.receiveBuffer, 0, 1024, OnBytesReceived, null);
-            OnMessageReceived?.Invoke(this, message);
+            this.receivedBytes += this.stream.EndRead(result);
+
+            if (this.receivedBytes < this.receiveBuffer.Length)
+            {
+                this.stream.BeginRead(this.receiveBuffer, receivedBytes, this.receiveBuffer.Length - this.receivedBytes, this.OnBytesReceived, null);
+                return;
+            }
+
+            if (this.receivePacketHeader && this.receiveBuffer.Length >= 6)
+            {
+                byte protocolId = this.receiveBuffer[0];
+                int length = BitConverter.ToInt32(this.receiveBuffer.Skip(1).Take(4).ToArray());
+                PacketFlags flags = new PacketFlags(this.receiveBuffer[5]);
+
+                if (protocolId == 0x69)
+                {
+                    this.receivedBytes = 0;
+                    this.receiveBuffer = new byte[length + 1];
+                    this.receivePacketHeader = false;
+
+                    this.stream.BeginRead(this.receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                }
+            }
+            else
+            {
+                byte[] messageBytes = this.receiveBuffer.Take(this.receiveBuffer.Length - 1).ToArray();
+                byte checksum = this.receiveBuffer.Last();
+
+                if (checksum == Utility.CalculateChecksum(messageBytes))
+                {
+                    try
+                    {
+                        this.OnDataReceived(JsonConvert.DeserializeObject<DNetworkPacket>(Encoding.UTF8.GetString(messageBytes)));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+                    }
+
+                    this.receivedBytes = 0;
+                    this.receiveBuffer = new byte[6];
+                    this.receivePacketHeader = true;
+
+                    this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                }
+                else
+                {
+                    Console.WriteLine("Got packet, but checksum is invalid");
+                }
+            }
         }
 
-        private void OnDataReceived(DNetworkPacket data)
+        private void OnDataReceived(DNetworkPacket packetRaw)
         {
+            Console.WriteLine($"Got packet of type: {packetRaw.type}");
 
+            switch (packetRaw.type)
+            {
+                case nameof(DLoginResponsePacket):
+                    {
+                        DNetworkPacket<DLoginResponsePacket> packet = packetRaw.DataAsType<DLoginResponsePacket>();
+
+                        this.OnLoginResponseReceived?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
+                    }
+                    break;
+                case nameof(DMessagePacket):
+                    {
+                        DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
+
+                        this.OnPrivateMessageReceived?.Invoke(this, packet.data.sender, packet.data.message);
+                    }
+                    break;
+            }
         }
 
-        public void SetState(ClientState newState)
+        public void SetState(IClientState newState)
         {
-            throw new NotImplementedException();
         }
 
         public void SetState(Type newStateType)
         {
-            throw new NotImplementedException();
         }
-
-        public event MessageReceived OnMessageReceived;
     }
 
-    public delegate void MessageReceived(Client sender, string message);
+    public delegate void LoginResponseReceived(Client sender, bool success, string errorMessage);
+    public delegate void MessageReceived(Client sender, string messageSender, string message);
 }

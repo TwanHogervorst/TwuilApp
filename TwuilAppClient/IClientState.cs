@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TwuilAppClient
 {
-    public interface ClientState
+    public interface IClientState
     {
 
         bool Login(string username, string password)

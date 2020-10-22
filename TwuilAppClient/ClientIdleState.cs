@@ -6,7 +6,7 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppClient
 {
-    class ClientIdleState
+    class ClientIdleState : IClientState
     {
         private Client context;
 
