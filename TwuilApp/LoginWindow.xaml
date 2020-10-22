@@ -12,7 +12,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition Height="150"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -33,11 +35,15 @@
         <TextBlock Grid.Row="5" Style="{StaticResource LabelControlStyle}">PASSWORD</TextBlock>
 
         <PasswordBox Grid.Row="6" Style="{StaticResource InputControlStyle}"></PasswordBox>
-        
-        <Button Grid.Row="7" Style="{StaticResource ButtonSignStyle}">SIGN IN</Button>
 
-        <Separator Grid.Row="8"/>
+        <TextBlock Grid.Row="7" Style="{StaticResource LabelControlStyle}">SERVER-IP</TextBlock>
 
-        <Button Grid.Row="9" Style="{StaticResource ButtonPasswordStyle}"> Forgot Password?</Button>
+        <TextBox Grid.Row="8" Style="{StaticResource InputControlStyle}"></TextBox>
+
+        <Button Grid.Row="9" Style="{StaticResource ButtonSignStyle}">SIGN IN</Button>
+
+        <Separator Grid.Row="10"/>
+
+        <Button Grid.Row="11" Style="{StaticResource ButtonPasswordStyle}"> Forgot Password?</Button>
     </Grid>
 </Window>
