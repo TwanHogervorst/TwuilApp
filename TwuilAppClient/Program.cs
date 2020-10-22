@@ -16,12 +16,17 @@ namespace TwuilAppClient
 
             Console.WriteLine("Client Connected!");
 
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
+            Console.Write("Password: ");
+            string password = Console.ReadLine();
+
             client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
             client.OnServerClosing += Client_OnServerClosing;
             client.OnPrivateMessageSendResponse += Client_OnPrivateMessageSendResponse;
             client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
 
-            client.Send(new DLoginPacket { username = "henk", password = "henk" });
+            client.Login(username, password);
 
             Console.WriteLine("Login Send!");
 

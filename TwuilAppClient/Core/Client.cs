@@ -48,7 +48,7 @@ namespace TwuilAppClient.Core
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
         }
 
-        public void Send(DAbstract data)
+        internal void Send(DAbstract data)
         {
             DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
             {
