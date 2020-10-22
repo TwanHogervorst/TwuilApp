@@ -80,7 +80,7 @@ namespace TwuilAppClient.Core
             {
                 this.receivedBytes += this.stream.EndRead(result);
             }
-            catch (Exception ex)
+            catch
             {
                 // server forcebly closed
                 this.OnServerClosing?.Invoke(this, "Server was forcebly closed");
