@@ -98,7 +98,7 @@ namespace TwuilAppServer.Core
 
         public void SetState(Type newStateType)
         {
-            if(newStateType.IsAssignableFrom(typeof(IServerClientState)))
+            if(typeof(IServerClientState).IsAssignableFrom(newStateType))
             {
                 if(newStateType == typeof(ServerClientActiveState))
                 {
@@ -188,10 +188,12 @@ namespace TwuilAppServer.Core
                         this.Login(packet.data.username, packet.data.password);
                     }
                     break;
-                case nameof(DMessagePacket):
+                case nameof(DPrivateMessagePacket):
                     {
-                        DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
-                        Console.WriteLine($"Bericht van {packet.data.sender}: {packet.data.message}");
+                        DNetworkPacket<DPrivateMessagePacket> packet = packetRaw.DataAsType<DPrivateMessagePacket>();
+
+                        Console.WriteLine($"Bericht van {packet.data.sender} naar {packet.data.receiver}: {packet.data.message}");
+                        this.SendPrivateMessage(packet.data.receiver, packet.data.message);
                     }
                     break;
                 case nameof(DClientDisconnectPacket):
@@ -210,6 +212,11 @@ namespace TwuilAppServer.Core
         private void Login(string username, string password)
         {
             this.State.Login(username, password);
+        }
+
+        private void SendPrivateMessage(string receiver, string message)
+        {
+            this.State.SendPrivateMessage(receiver, message);
         }
         
     }

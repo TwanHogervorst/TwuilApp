@@ -18,12 +18,14 @@ namespace TwuilAppClient.Core
     {
         public string Username { get; private set; }
         public bool IsActive => this.State is ClientActiveState;
+        public bool Connected => this.client.Connected && this.stream.CanRead && this.stream.CanWrite;
 
         public IClientState State { get; private set; }
 
-        public event MessageReceived OnPrivateMessageReceived;
+        public event PrivateMessageReceived OnPrivateMessageReceived;
         public event LoginResponseReceived OnLoginResponseReceived;
         public event ServerClosingReceived OnServerClosing;
+        public event PrivateMessageSendResponseReceived OnPrivateMessageSendResponse;
 
         private TcpClient client;
         private Stream stream;
@@ -44,11 +46,6 @@ namespace TwuilAppClient.Core
             this.receivePacketHeader = true;
 
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
-        }
-
-        public void Login(string username, string password)
-        {
-            this.State.Login(username, password);
         }
 
         public void Send(DAbstract data)
@@ -79,7 +76,18 @@ namespace TwuilAppClient.Core
 
         private void OnBytesReceived(IAsyncResult result)
         {
-            this.receivedBytes += this.stream.EndRead(result);
+            try
+            {
+                this.receivedBytes += this.stream.EndRead(result);
+            }
+            catch (Exception ex)
+            {
+                // server forcebly closed
+                this.OnServerClosing?.Invoke(this, "Server was forcebly closed");
+                this.client.Close();
+                this.client.Dispose();
+                return;
+            }
 
             if (this.receivedBytes < this.receiveBuffer.Length)
             {
@@ -151,11 +159,18 @@ namespace TwuilAppClient.Core
                         this.OnLoginResponseReceived?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
                     }
                     break;
-                case nameof(DMessagePacket):
+                case nameof(DPrivateMessagePacket):
                     {
-                        DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
+                        DNetworkPacket<DPrivateMessagePacket> packet = packetRaw.DataAsType<DPrivateMessagePacket>();
 
                         this.OnPrivateMessageReceived?.Invoke(this, packet.data.sender, packet.data.message);
+                    }
+                    break;
+                case nameof(DPrivateMessageSendResponse):
+                    {
+                        DNetworkPacket<DPrivateMessageSendResponse> packet = packetRaw.DataAsType<DPrivateMessageSendResponse>();
+
+                        this.OnPrivateMessageSendResponse?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
                     }
                     break;
                 case nameof(DServerClosingPacket):
@@ -186,9 +201,20 @@ namespace TwuilAppClient.Core
                 }
             }
         }
+
+        public void Login(string username, string password)
+        {
+            if(this.Connected) this.State.Login(username, password);
+        }
+
+        public void SendPrivateMessage(string receiver, string message)
+        {
+            if(this.Connected) this.State.SendPrivateMessage(receiver, message);
+        }
     }
 
     public delegate void LoginResponseReceived(Client sender, bool success, string errorMessage);
-    public delegate void MessageReceived(Client sender, string messageSender, string message);
+    public delegate void PrivateMessageReceived(Client sender, string messageSender, string message);
     public delegate void ServerClosingReceived(Client sender, string reason);
+    public delegate void PrivateMessageSendResponseReceived(Client sender, bool success, string errorMessage);
 }

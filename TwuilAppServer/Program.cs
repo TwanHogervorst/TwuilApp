@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using TwuilAppLib.Data;
 using TwuilAppServer.Core;
 
@@ -14,6 +15,7 @@ namespace TwuilAppServer
 
             while (Console.ReadLine().ToLower() != "quit") { }
 
+            Console.WriteLine("Server Closing...");
             server.Dispose();
         }
     }

@@ -9,9 +9,8 @@ namespace TwuilAppServer.States
 
         string Username { get { return null; } }
 
-        bool Login(string username, string password)
+        void Login(string username, string password)
         {
-            return false;
         }
 
         void SendPrivateMessage(string receiver, string message)

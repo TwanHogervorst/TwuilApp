@@ -20,32 +20,37 @@ namespace TwuilAppServer.States
             this.context = context;
         }
 
-        public bool Login(string username, string password)
+        public void Login(string username, string password)
         {
-            bool result = false;
-
-            // Do check
-            result = username == password;
-
             DLoginResponsePacket response = new DLoginResponsePacket();
 
-            if(result)
+            try
             {
-                this.Username = username;
-                this.context.SetState(typeof(ServerClientActiveState));
+                if (username == password)
+                {
+                    this.Username = username;
+                    this.context.SetState(typeof(ServerClientActiveState));
 
-                response.status = ResponsePacketStatus.Success;
-                response.username = username;
+                    Console.WriteLine($"Client {this.Username} logged in!");
+
+                    response.status = ResponsePacketStatus.Success;
+                    response.username = username;
+                }
+                else
+                {
+                    response.status = ResponsePacketStatus.Error;
+                    response.errorMessage = "Username and/or password is incorrect.";
+                }
             }
-            else
+            catch (Exception ex)
             {
                 response.status = ResponsePacketStatus.Error;
-                response.errorMessage = "Username and/or password is incorrect.";
+                response.errorMessage = "Internal server error";
+
+                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
             }
 
             this.context.Send(response);
-
-            return result;
         }
 
     }

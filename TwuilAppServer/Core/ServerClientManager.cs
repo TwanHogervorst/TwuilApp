@@ -24,8 +24,8 @@ namespace TwuilAppServer.Core
         {
             bool result = false;
 
-            client = this.ClientList.FirstOrDefault(c => c.Username == username);
-            result = client == null;
+            client = this.ClientList.Where(c => c.IsActive).FirstOrDefault(c => c.Username == username);
+            result = client != null;
 
             return result;
         }

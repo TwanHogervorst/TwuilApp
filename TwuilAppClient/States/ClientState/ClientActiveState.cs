@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
 using TwuilAppClient.Core;
+using TwuilAppLib.Data;
 
 namespace TwuilAppClient.States
 {
@@ -18,7 +19,12 @@ namespace TwuilAppClient.States
 
         public void SendPrivateMessage(string receiver, string message)
         {
-
+            this.context.Send(new DPrivateMessagePacket
+            {
+                sender = this.context.Username,
+                receiver = receiver,
+                message = message
+            });
         }
 
     }

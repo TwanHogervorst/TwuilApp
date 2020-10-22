@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using TwuilAppClient.Core;
 using TwuilAppLib.Data;
@@ -17,8 +18,10 @@ namespace TwuilAppClient
 
             client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
             client.OnServerClosing += Client_OnServerClosing;
+            client.OnPrivateMessageSendResponse += Client_OnPrivateMessageSendResponse;
+            client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
 
-            client.Send(new DLoginPacket { username = "test", password = "henk" });
+            client.Send(new DLoginPacket { username = "test", password = "test" });
 
             Console.WriteLine("Login Send!");
 
@@ -26,14 +29,30 @@ namespace TwuilAppClient
 
             Console.WriteLine("Message Send!");*/
 
-            while (Console.ReadLine().ToLower() != "quit") { }
+            string cmd;
+            while ((cmd = Console.ReadLine()).ToLower() != "quit")
+            {
+                string[] msg = cmd.Split(';');
+
+                if(msg.Length > 1) client.SendPrivateMessage(msg[0], msg.Skip(1).Aggregate("", (accu, elem) => accu + ";" + elem));
+            }
 
             client.Send(new DClientDisconnectPacket());
         }
 
+        private static void Client_OnPrivateMessageReceived(Client sender, string messageSender, string message)
+        {
+            Console.WriteLine($"PrivateMessageReceived => messageSender={messageSender}; message={message}");
+        }
+
+        private static void Client_OnPrivateMessageSendResponse(Client sender, bool success, string errorMessage)
+        {
+            Console.WriteLine($"PrivateMessageSendResponse => success={success}; errorMessage={errorMessage ?? "NULL"}");
+        }
+
         private static void Client_OnServerClosing(Client sender, string reason)
         {
-            Console.WriteLine($"ServerClosing => reason={reason}");
+            Console.WriteLine($"ServerClosing => reason={reason ?? "NULL"}");
 
             Environment.Exit(0);
         }

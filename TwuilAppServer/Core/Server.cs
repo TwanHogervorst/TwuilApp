@@ -42,7 +42,7 @@ namespace TwuilAppServer.Core
             foreach (ServerClient receiver in receiverList) this.SendToClient(receiver, data);
         }
 
-        public void SendToClient(ServerClient receiver, DAbstract data)
+        private void SendToClient(ServerClient receiver, DAbstract data)
         {
             if (this.disposed) throw new ObjectDisposedException(nameof(Server)); 
             if (receiver != null && receiver.Connected) receiver.Send(data);

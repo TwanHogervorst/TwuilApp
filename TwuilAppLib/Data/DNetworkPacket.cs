@@ -71,7 +71,7 @@ namespace TwuilAppLib.Data
         public string username;
     }
 
-    public class DMessagePacket : DAbstract
+    public class DPrivateMessagePacket : DAbstract
     {
         public string sender;
         public string receiver;
@@ -84,6 +84,11 @@ namespace TwuilAppLib.Data
     }
 
     public class DClientDisconnectPacket : DAbstract
+    {
+
+    }
+
+    public class DPrivateMessageSendResponse : DNetworkResponsePacket
     {
 
     }
