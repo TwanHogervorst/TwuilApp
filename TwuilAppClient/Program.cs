@@ -27,6 +27,8 @@ namespace TwuilAppClient
             Console.WriteLine("Message Send!");*/
 
             while (Console.ReadLine().ToLower() != "quit") { }
+
+            client.Send(new DClientDisconnectPacket());
         }
 
         private static void Client_OnServerClosing(Client sender, string reason)

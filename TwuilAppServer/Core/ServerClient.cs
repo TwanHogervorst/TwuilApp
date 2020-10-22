@@ -113,7 +113,17 @@ namespace TwuilAppServer.Core
 
         private void OnBytesReceived(IAsyncResult result)
         {
-            this.receivedBytes += this.stream.EndRead(result);
+            try
+            {
+                this.receivedBytes += this.stream.EndRead(result);
+            }
+            catch (Exception)
+            {
+                // disconnected
+                this.server.ClientManager.Remove(this);
+                this.client.Dispose();
+                return;
+            }
 
             if(this.receivedBytes < this.receiveBuffer.Length)
             {
@@ -156,7 +166,7 @@ namespace TwuilAppServer.Core
                     this.receiveBuffer = new byte[6];
                     this.receivePacketHeader = true;
 
-                    this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                    if(this.Connected) this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
                 else
                 {
@@ -169,7 +179,7 @@ namespace TwuilAppServer.Core
         private void OnDataReceived(DNetworkPacket packetRaw)
         {
             Console.WriteLine($"Got packet of type: {packetRaw.type}");
-            
+
             switch(packetRaw.type)
             {
                 case nameof(DLoginPacket):
@@ -182,6 +192,16 @@ namespace TwuilAppServer.Core
                     {
                         DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
                         Console.WriteLine($"Bericht van {packet.data.sender}: {packet.data.message}");
+                    }
+                    break;
+                case nameof(DClientDisconnectPacket):
+                    {
+                        this.server.ClientManager.Remove(this);
+
+                        Console.WriteLine($"Client {this.State.Username ?? this.client.Client.RemoteEndPoint.ToString()} disconnected!");
+
+                        this.client.Close();
+                        this.client.Dispose();
                     }
                     break;
             }

@@ -10,10 +10,9 @@ namespace TwuilAppServer.Core
 {
     public class Server : IDisposable
     {
+        public ServerClientManager ClientManager { get; } = new ServerClientManager();
 
         private TcpListener listener;
-
-        private List<ServerClient> clientList = new List<ServerClient>();
 
         private bool disposed;
 
@@ -30,11 +29,13 @@ namespace TwuilAppServer.Core
 
             if(client != null && client.Connected)
             {
-                this.clientList.Add(new ServerClient(client, this));
+                this.ClientManager.Add(new ServerClient(client, this));
             }
+
+            this.listener.BeginAcceptTcpClient(this.OnClientAccepted, null);
         }
 
-        public void Broadcast(DAbstract data) => this.SendToClients(this.clientList, data);
+        public void Broadcast(DAbstract data) => this.SendToClients(this.ClientManager.ClientList, data);
 
         public void SendToClients(List<ServerClient> receiverList, DAbstract data)
         {
@@ -61,9 +62,16 @@ namespace TwuilAppServer.Core
 
                 try
                 {
-                    foreach(ServerClient client in this.clientList)
+                    foreach (ServerClient client in this.ClientManager.ClientList)
                         client.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+                }
 
+                try
+                {
                     this.listener.Stop();
                 }
                 catch (Exception ex)

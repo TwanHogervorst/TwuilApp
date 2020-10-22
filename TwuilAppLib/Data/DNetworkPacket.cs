@@ -83,6 +83,11 @@ namespace TwuilAppLib.Data
         public string reason;
     }
 
+    public class DClientDisconnectPacket : DAbstract
+    {
+
+    }
+
     public enum ResponsePacketStatus
     {
         Success,
