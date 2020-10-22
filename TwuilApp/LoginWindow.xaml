@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="TwuillApp" Height="Auto" Width="500"
         SizeToContent="Height"
+        ResizeMode="NoResize"
         Style="{StaticResource LoginWindowStyle}"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" AllowsTransparency="False">
     <Grid HorizontalAlignment="Center">
