@@ -38,7 +38,7 @@ namespace TwuilAppClient
             OnMessageReceived?.Invoke(this, message);
         }
 
-        private void OnDataReceived(DAbstract data)
+        private void OnDataReceived(DNetworkPacket data)
         {
 
         }
