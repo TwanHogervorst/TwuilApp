@@ -22,6 +22,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="1" Style="{StaticResource TitleControlStyle}">TwuillApp</TextBlock>
@@ -42,12 +43,14 @@
 
         <Button Grid.Row="9" Style="{StaticResource ButtonSignStyle}" Name="SignInButton" Click="SignInButton_Click">SIGN IN</Button>
 
-        <Separator Grid.Row="10"/>
+        <Button Grid.Row="10" Style="{StaticResource ButtonSignStyle}" Name="SignUpButton" Click="SignUpButton_Click">SIGN UP</Button>
+
+        <Separator Grid.Row="11"/>
 
         <!--<Button Grid.Row="11" Style="{StaticResource ButtonPasswordStyle}">Forgot Password?</Button>-->
-        <Label Grid.Row="11" Style="{StaticResource ErrorBoxStyle}" Visibility="Hidden" Name="ErrorMessageLabel">
+        <Label Grid.Row="12" Style="{StaticResource ErrorBoxStyle}" Visibility="Visible" Name="ErrorMessageLabel">
             <Viewbox StretchDirection="DownOnly" Stretch="Uniform">
-                <ContentControl Name="ErrorMessageContentControl" Content="Dit is een hele lange error message om te kijken hoe ie daar mee omgaat."/>
+                <ContentControl Name="ErrorMessageContentControl"/>
             </Viewbox>
         </Label>
     </Grid>

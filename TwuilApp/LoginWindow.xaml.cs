@@ -34,6 +34,13 @@ namespace TwuilApp
 
             try
             {
+                if (this.client != null)
+                {
+                    this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
+                    this.client.OnServerClosing -= this.Client_OnServerClosing;
+                    this.client.Dispose();
+                }
+
                 this.client = new Client(ip, Constants.SERVER_PORT);
 
                 this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
@@ -43,7 +50,7 @@ namespace TwuilApp
             }
             catch (Exception ex)
             {
-                this.ShowError($"Something went wrong while connecting to the server. {ex.Message}");
+                this.ShowError($"Something went wrong while connecting to the server.");
             }
         }
 
@@ -77,6 +84,34 @@ namespace TwuilApp
                 this.ErrorMessageContentControl.Content = message;
                 this.ErrorMessageLabel.Visibility = Visibility.Visible;
             });
+        }
+
+        private void SignUpButton_Click(object sender, RoutedEventArgs e)
+        {
+            string ip = this.ServerIpTextBox.Text;
+            string username = this.UsernameTextBox.Text;
+            string password = this.PasswordTextBox.Password;
+
+            try
+            {
+                if(this.client != null)
+                {
+                    this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
+                    this.client.OnServerClosing -= this.Client_OnServerClosing;
+                    this.client.Dispose();
+                }
+
+                this.client = new Client(ip, Constants.SERVER_PORT);
+
+                this.client.OnLoginResponseReceived += Client_OnLoginResponseReceived;
+                this.client.OnServerClosing += Client_OnServerClosing;
+
+                this.client.SignUp(username, password);
+            }
+            catch (Exception ex)
+            {
+                this.ShowError($"Something went wrong while connecting to the server.");
+            }
         }
     }
 }

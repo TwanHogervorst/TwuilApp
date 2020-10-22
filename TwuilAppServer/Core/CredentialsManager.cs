@@ -74,7 +74,7 @@ namespace TwuilAppServer.Core
             if (this.UserExists(username))
             {
                 result = false;
-                errorMessage = "The user '{username}' already exists";
+                errorMessage = $"The user '{username}' already exists";
             }
 
             if(result)

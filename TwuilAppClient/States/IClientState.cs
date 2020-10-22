@@ -11,6 +11,10 @@ namespace TwuilAppClient.States
         {
         }
 
+        void SignUp(string username, string password)
+        {
+        }
+
         void SendPrivateMessage(string receiver, string message)
         {
         }

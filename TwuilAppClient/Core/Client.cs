@@ -14,7 +14,7 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppClient.Core
 {
-    public class Client : IStateContext<IClientState>
+    public class Client : IStateContext<IClientState>, IDisposable
     {
         public string Username { get; private set; }
         public bool IsActive => this.State is ClientActiveState;
@@ -33,6 +33,7 @@ namespace TwuilAppClient.Core
         private int receivedBytes;
         private byte[] receiveBuffer;
         private bool receivePacketHeader;
+        private bool disposed;
 
         public Client(string ip, ushort port)
         {
@@ -207,9 +208,48 @@ namespace TwuilAppClient.Core
             if(this.Connected) this.State.Login(username, password);
         }
 
+        public void SignUp(string username, string password)
+        {
+            if (this.Connected) this.State.SignUp(username, password);
+        }
+
         public void SendPrivateMessage(string receiver, string message)
         {
             if(this.Connected) this.State.SendPrivateMessage(receiver, message);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    this.Send(new DClientDisconnectPacket());
+                }
+
+                try
+                {
+                    this.client?.Close();
+                    this.client?.Dispose();
+                }
+                catch
+                {
+                    // jammer dan
+                }
+
+                disposed = true;
+            }
+        }
+
+        ~Client()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 

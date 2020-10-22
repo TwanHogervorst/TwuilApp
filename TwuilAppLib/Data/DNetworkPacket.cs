@@ -66,6 +66,12 @@ namespace TwuilAppLib.Data
         public string password;
     }
 
+    public class DSignUpPacket : DAbstract
+    {
+        public string username;
+        public string password;
+    }
+
     public class DLoginResponsePacket : DNetworkResponsePacket
     {
         public string username;

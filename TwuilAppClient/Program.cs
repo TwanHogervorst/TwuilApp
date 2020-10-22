@@ -42,7 +42,7 @@ namespace TwuilAppClient
                 if(msg.Length > 1) client.SendPrivateMessage(msg[0], msg.Skip(1).Aggregate("", (accu, elem) => accu + ";" + elem));
             }
 
-            client.Send(new DClientDisconnectPacket());
+            client.Dispose();
         }
 
         private static void Client_OnPrivateMessageReceived(Client sender, string messageSender, string message)

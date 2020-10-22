@@ -11,6 +11,12 @@ namespace TwuilAppServer.States
 
         void Login(string username, string password)
         {
+
+        }
+
+        void SignUp(string username, string password)
+        {
+
         }
 
         void SendPrivateMessage(string receiver, string message)

@@ -186,7 +186,15 @@ namespace TwuilAppServer.Core
                 case nameof(DLoginPacket):
                     {
                         DNetworkPacket<DLoginPacket> packet = packetRaw.DataAsType<DLoginPacket>();
+
                         this.Login(packet.data.username, packet.data.password);
+                    }
+                    break;
+                case nameof(DSignUpPacket):
+                    {
+                        DNetworkPacket<DSignUpPacket> packet = packetRaw.DataAsType<DSignUpPacket>();
+
+                        this.SignUp(packet.data.username, packet.data.password);
                     }
                     break;
                 case nameof(DPrivateMessagePacket):
@@ -213,6 +221,11 @@ namespace TwuilAppServer.Core
         private void Login(string username, string password)
         {
             this.State.Login(username, password);
+        }
+
+        private void SignUp(string username, string password)
+        {
+            this.State.SignUp(username, password);
         }
 
         private void SendPrivateMessage(string receiver, string message)
