@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using TwuilAppLib.Core;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 
@@ -33,7 +35,19 @@ namespace TwuilAppClient
             };
 
             byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
+            this.stream.Write(new byte[]
+            {
+                0x69
+            });
+            this.stream.Write(BitConverter.GetBytes(buffer.Length));
+            this.stream.Write(new byte[]{
+                0x00
+            });
             this.stream.Write(buffer);
+            this.stream.Write(new byte[]
+            {
+                Utility.CalculateChecksum(buffer)
+            });
         }
 
         private void OnBytesReceived(IAsyncResult result)
