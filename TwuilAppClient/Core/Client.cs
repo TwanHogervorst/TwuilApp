@@ -14,7 +14,7 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppClient.Core
 {
-    public class Client : IStateContext<IClientState> 
+    public class Client : IStateContext<IClientState>
     {
         public string Username { get; private set; }
         public bool IsActive => this.State is ClientActiveState;

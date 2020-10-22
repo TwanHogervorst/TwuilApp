@@ -13,6 +13,8 @@ namespace TwuilAppServer.Core
 
         private Dictionary<string, string> credentials = new Dictionary<string, string>();
 
+        private object writeLock = new object();
+
         public CredentialsManager(Server server)
         {
             this.server = server;
@@ -34,18 +36,7 @@ namespace TwuilAppServer.Core
             }
             else
             {
-                try
-                {
-                    using(StreamWriter writer = new StreamWriter(credsFile.Open(FileMode.Create, FileAccess.Write)))
-                    {
-                        writer.Write(JsonConvert.SerializeObject(this.credentials));
-                        writer.Flush();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An Exception occured while creating creds.json. {ex.GetType().Name}: {ex.Message}");
-                }
+                this.Save();
             }
         }
 
@@ -54,7 +45,7 @@ namespace TwuilAppServer.Core
             bool result = true;
             string errorMessage = null;
 
-            if (!this.credentials.ContainsKey(username))
+            if (!this.UserExists(username))
             {
                 result = false;
                 errorMessage = "Username does not exists.";
@@ -71,6 +62,57 @@ namespace TwuilAppServer.Core
             }
 
             return (result, errorMessage);
+        }
+
+        public bool UserExists(string username) => this.credentials.ContainsKey(username);
+
+        public (bool, string) CreateAccount(string username, string password)
+        {
+            bool result = true;
+            string errorMessage = null;
+
+            if (this.UserExists(username))
+            {
+                result = false;
+                errorMessage = "The user '{username}' already exists";
+            }
+
+            if(result)
+            {
+                this.credentials.Add(username, password);
+                if (!this.Save())
+                {
+                    result = false;
+                    errorMessage = "There was an internal server error while creating you're account. Please try again later.";
+                }
+            }
+
+            return (result, errorMessage);
+        }
+
+        private bool Save()
+        {
+            bool result = false;
+
+            try
+            {
+                lock(writeLock)
+                {
+                    using (StreamWriter writer = new StreamWriter(new FileStream("creds.json", FileMode.Create, FileAccess.Write)))
+                    {
+                        writer.Write(JsonConvert.SerializeObject(this.credentials));
+                        writer.Flush();
+                    }
+                }
+
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An Exception occured while saving creds.json. {ex.GetType().Name}: {ex.Message}");
+            }
+
+            return result;
         }
     }
 }

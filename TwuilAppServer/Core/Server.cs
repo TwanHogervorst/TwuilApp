@@ -39,6 +39,10 @@ namespace TwuilAppServer.Core
             this.listener.BeginAcceptTcpClient(this.OnClientAccepted, null);
         }
 
+        public bool UserIsOnline(string username) => this.ClientManager.Contains(username);
+
+        public bool UserExists(string username) => this.CredentialsManager.UserExists(username);
+
         public void Broadcast(DAbstract data) => this.SendToClients(this.ClientManager.ClientList, data);
 
         public void SendToClients(List<ServerClient> receiverList, DAbstract data)
