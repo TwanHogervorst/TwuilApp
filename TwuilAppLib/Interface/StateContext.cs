@@ -7,7 +7,11 @@ namespace TwuilAppLib.Interface
     public interface StateContext<T>
     {
 
-        T State { get; set; }
+        T State { get; }
+
+        void SetState(T newState);
+
+        void SetState(Type newStateType);
 
     }
 }
