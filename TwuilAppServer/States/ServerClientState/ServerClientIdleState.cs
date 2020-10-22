@@ -1,27 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
+using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
+using TwuilAppServer.Core;
 
 namespace TwuilAppServer.States
 {
     public class ServerClientIdleState : IServerClientState
     {
 
-        private IStateContext<IServerClientState> context;
+        public string Username { get; private set; } = null;
 
-        public ServerClientIdleState(IStateContext<IServerClientState> context)
+        private ServerClient context;
+        private Server server;
+
+        public ServerClientIdleState(ServerClient context, Server server)
         {
             this.context = context;
+            this.server = server;
         }
 
-        public bool Login(string username, string password)
+        public void Login(string username, string password)
         {
-            bool result = false;
+            DLoginResponsePacket response = new DLoginResponsePacket();
 
+            try
+            {
+                (bool, string) authenticationResult = this.server.CredentialsManager.Authenticate(username, password);
+                if (authenticationResult.Item1)
+                {
+                    this.Username = username;
+                    this.context.SetState(typeof(ServerClientActiveState));
 
+                    Console.WriteLine($"Client {this.Username} logged in!");
 
-            return result;
+                    response.status = ResponsePacketStatus.Success;
+                    response.username = username;
+                }
+                else
+                {
+                    response.status = ResponsePacketStatus.Error;
+                    response.errorMessage = authenticationResult.Item2 ?? "Something went wrong while authenticating.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.status = ResponsePacketStatus.Error;
+                response.errorMessage = "Internal server error";
+
+                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            }
+
+            this.context.Send(response);
         }
 
     }

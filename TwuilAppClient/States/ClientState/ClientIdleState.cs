@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TwuilAppClient.Core;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 
-namespace TwuilAppClient
+namespace TwuilAppClient.States
 {
-    class ClientIdleState
+    class ClientIdleState : IClientState
     {
         private Client context;
 
@@ -15,14 +16,13 @@ namespace TwuilAppClient
             this.context = client;
         }
 
-        public bool Login(string username, string password)
+        public void Login(string username, string password)
         {
             this.context.Send(new DLoginPacket
             {
                 username = username,
                 password = password
             });
-            return true;
         }
     }
 }

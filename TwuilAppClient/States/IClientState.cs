@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TwuilAppServer.States
+namespace TwuilAppClient.States
 {
-    public interface IServerClientState
+    public interface IClientState
     {
-
-        string Username { get { return null; } }
 
         void Login(string username, string password)
         {
@@ -15,7 +13,6 @@ namespace TwuilAppServer.States
 
         void SendPrivateMessage(string receiver, string message)
         {
-
         }
 
     }

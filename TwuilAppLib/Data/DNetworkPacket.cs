@@ -14,6 +14,9 @@ namespace TwuilAppLib.Data
         public PacketFlags(byte flagByte)
         {
             this.flagByte = flagByte;
+
+            // defaults
+            this.IsEncrypted = false;
         }
 
         public bool IsEncrypted
@@ -45,6 +48,12 @@ namespace TwuilAppLib.Data
         }
     }
 
+    public abstract class DNetworkResponsePacket : DAbstract
+    {
+        public ResponsePacketStatus status;
+        public string errorMessage;
+    }
+
     public class DNetworkPacket<T> : DAbstract where T : DAbstract
     {
         public string type;
@@ -57,10 +66,36 @@ namespace TwuilAppLib.Data
         public string password;
     }
 
-    public class DMessagePacket : DAbstract
+    public class DLoginResponsePacket : DNetworkResponsePacket
+    {
+        public string username;
+    }
+
+    public class DPrivateMessagePacket : DAbstract
     {
         public string sender;
         public string receiver;
         public string message;
+    }
+
+    public class DServerClosingPacket : DAbstract
+    {
+        public string reason;
+    }
+
+    public class DClientDisconnectPacket : DAbstract
+    {
+
+    }
+
+    public class DPrivateMessageSendResponse : DNetworkResponsePacket
+    {
+
+    }
+
+    public enum ResponsePacketStatus
+    {
+        Success,
+        Error
     }
 }
