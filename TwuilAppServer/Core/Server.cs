@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using TwuilAppLib.Data;
 
-namespace TwuilAppServer
+namespace TwuilAppServer.Core
 {
     public class Server
     {

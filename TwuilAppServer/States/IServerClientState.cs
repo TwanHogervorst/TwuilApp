@@ -14,7 +14,7 @@ namespace TwuilAppServer.States
             return false;
         }
 
-        void SendPrivateMessage(string username, string message)
+        void SendPrivateMessage(string receiver, string message)
         {
 
         }

@@ -68,7 +68,7 @@ namespace TwuilAppLib.Data
 
     public class DLoginResponsePacket : DNetworkResponsePacket
     {
-
+        public string username;
     }
 
     public class DMessagePacket : DAbstract

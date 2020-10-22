@@ -19,7 +19,7 @@ namespace TwuilAppServer.States
             this.server = server;
         }
 
-        public void SendPrivateMessage(string username, string message)
+        public void SendPrivateMessage(string receiver, string message)
         {
 
         }

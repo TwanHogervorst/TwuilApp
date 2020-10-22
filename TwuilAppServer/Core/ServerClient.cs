@@ -13,12 +13,15 @@ using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 using TwuilAppServer.States;
 
-namespace TwuilAppServer
+namespace TwuilAppServer.Core
 {
     public class ServerClient : IStateContext<IServerClientState>
     {
 
         public string Username => this.State.Username;
+        public bool IsActive => this.State is ServerClientActiveState;
+
+        public IServerClientState State { get; private set; }
 
         private Server server;
 
@@ -28,10 +31,6 @@ namespace TwuilAppServer
         private int receivedBytes;
         private byte[] receiveBuffer;
         private bool receivePacketHeader;
-
-        public bool IsActive { get; private set; }
-
-        public IServerClientState State { get; private set; }
 
         public ServerClient(TcpClient client, Server server)
         {

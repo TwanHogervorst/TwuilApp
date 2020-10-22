@@ -7,25 +7,29 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using TwuilAppClient.States;
 using TwuilAppLib.Core;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 
-namespace TwuilAppClient
+namespace TwuilAppClient.Core
 {
     public class Client : IStateContext<IClientState> 
     {
+        public string Username { get; private set; }
+        public bool IsActive => this.State is ClientActiveState;
+
+        public IClientState State { get; private set; }
+
+        public event MessageReceived OnPrivateMessageReceived;
+        public event LoginResponseReceived OnLoginResponseReceived;
+
         private TcpClient client;
         private Stream stream;
 
         private int receivedBytes;
         private byte[] receiveBuffer;
         private bool receivePacketHeader;
-
-        public IClientState State { get; private set; }
-
-        public event MessageReceived OnPrivateMessageReceived;
-        public event LoginResponseReceived OnLoginResponseReceived;
 
         public Client()
         {
@@ -39,6 +43,11 @@ namespace TwuilAppClient
             this.receivePacketHeader = true;
 
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+        }
+
+        public void Login(string username, string password)
+        {
+            this.State.Login(username, password);
         }
 
         public void Send(DAbstract data)
@@ -130,6 +139,13 @@ namespace TwuilAppClient
                 case nameof(DLoginResponsePacket):
                     {
                         DNetworkPacket<DLoginResponsePacket> packet = packetRaw.DataAsType<DLoginResponsePacket>();
+
+                        if(packet.data.status == ResponsePacketStatus.Success)
+                        {
+                            this.Username = packet.data.username;
+                        }
+
+                        this.SetState(new ClientActiveState(this));
 
                         this.OnLoginResponseReceived?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
                     }

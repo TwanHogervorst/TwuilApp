@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
+using TwuilAppServer.Core;
 
 namespace TwuilAppServer.States
 {
@@ -34,6 +35,7 @@ namespace TwuilAppServer.States
                 this.context.SetState(typeof(ServerClientActiveState));
 
                 response.status = ResponsePacketStatus.Success;
+                response.username = username;
             }
             else
             {

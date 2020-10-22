@@ -4,7 +4,7 @@ using System.Text;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 
-namespace TwuilAppClient
+namespace TwuilAppClient.States
 {
     class ClientIdleState : IClientState
     {
@@ -15,14 +15,13 @@ namespace TwuilAppClient
             this.context = client;
         }
 
-        public bool Login(string username, string password)
+        public void Login(string username, string password)
         {
             this.context.Send(new DLoginPacket
             {
                 username = username,
                 password = password
             });
-            return true;
         }
     }
 }
