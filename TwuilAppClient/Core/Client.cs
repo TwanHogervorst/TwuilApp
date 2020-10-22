@@ -23,6 +23,7 @@ namespace TwuilAppClient.Core
 
         public event MessageReceived OnPrivateMessageReceived;
         public event LoginResponseReceived OnLoginResponseReceived;
+        public event ServerClosingReceived OnServerClosing;
 
         private TcpClient client;
         private Stream stream;
@@ -31,9 +32,9 @@ namespace TwuilAppClient.Core
         private byte[] receiveBuffer;
         private bool receivePacketHeader;
 
-        public Client()
+        public Client(string ip, ushort port)
         {
-            this.client = new TcpClient(IPAddress.Loopback.ToString(), 42069);
+            this.client = new TcpClient(ip, port);
             this.stream = this.client.GetStream();
 
             this.State = new ClientIdleState(this);
@@ -73,7 +74,7 @@ namespace TwuilAppClient.Core
                 Utility.CalculateChecksum(buffer)
             });
 
-            this.stream.FlushAsync();
+            this.stream.Flush();
         }
 
         private void OnBytesReceived(IAsyncResult result)
@@ -157,18 +158,37 @@ namespace TwuilAppClient.Core
                         this.OnPrivateMessageReceived?.Invoke(this, packet.data.sender, packet.data.message);
                     }
                     break;
+                case nameof(DServerClosingPacket):
+                    {
+                        DNetworkPacket<DServerClosingPacket> packet = packetRaw.DataAsType<DServerClosingPacket>();
+
+                        this.OnServerClosing?.Invoke(this, packet.data.reason);
+                    }
+                    break;
             }
         }
 
         public void SetState(IClientState newState)
         {
+            this.State = newState;
         }
 
         public void SetState(Type newStateType)
         {
+            if (newStateType.IsAssignableFrom(typeof(IClientState)))
+            {
+                if (false /* type check */)
+                {
+                }
+                else
+                {
+                    this.State = Activator.CreateInstance(newStateType) as IClientState;
+                }
+            }
         }
     }
 
     public delegate void LoginResponseReceived(Client sender, bool success, string errorMessage);
     public delegate void MessageReceived(Client sender, string messageSender, string message);
+    public delegate void ServerClosingReceived(Client sender, string reason);
 }

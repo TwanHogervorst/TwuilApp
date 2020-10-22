@@ -20,6 +20,7 @@ namespace TwuilAppServer.Core
 
         public string Username => this.State.Username;
         public bool IsActive => this.State is ServerClientActiveState;
+        public bool Connected => this.client.Connected && this.stream.CanRead && this.stream.CanWrite;
 
         public IServerClientState State { get; private set; }
 
@@ -48,6 +49,22 @@ namespace TwuilAppServer.Core
             this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
         }
 
+        public void Disconnect()
+        {
+            try
+            {
+                if(this.client != null && this.client.Connected)
+                {
+                    this.client.Close();
+                    this.client.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         public void Send(DAbstract data)
         {
             DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
@@ -71,7 +88,7 @@ namespace TwuilAppServer.Core
                 Utility.CalculateChecksum(buffer)
             });
 
-            this.stream.FlushAsync();
+            this.stream.Flush();
         }
 
         public void SetState(IServerClientState newState)

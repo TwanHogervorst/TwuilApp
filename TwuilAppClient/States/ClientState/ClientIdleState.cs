@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TwuilAppClient.Core;
 using TwuilAppLib.Data;
 using TwuilAppLib.Interface;
 

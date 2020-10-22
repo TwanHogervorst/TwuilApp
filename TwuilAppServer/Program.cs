@@ -1,5 +1,6 @@
 ﻿using System;
 using TwuilAppLib.Data;
+using TwuilAppServer.Core;
 
 namespace TwuilAppServer
 {
@@ -12,6 +13,8 @@ namespace TwuilAppServer
             Console.WriteLine("Server Started!");
 
             while (Console.ReadLine().ToLower() != "quit") { }
+
+            server.Dispose();
         }
     }
 }

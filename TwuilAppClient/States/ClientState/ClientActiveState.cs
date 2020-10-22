@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Mail;
 using System.Text;
+using TwuilAppClient.Core;
 
 namespace TwuilAppClient.States
 {

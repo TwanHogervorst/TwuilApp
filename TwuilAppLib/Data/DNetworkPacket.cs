@@ -78,6 +78,11 @@ namespace TwuilAppLib.Data
         public string message;
     }
 
+    public class DServerClosingPacket : DAbstract
+    {
+        public string reason;
+    }
+
     public enum ResponsePacketStatus
     {
         Success,
