@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using TwuilAppLib.Core;
@@ -11,18 +12,20 @@ using TwuilAppLib.Interface;
 
 namespace TwuilAppClient
 {
-    public class Client : StateContext<ClientState> 
+    public class Client : IStateContext<ClientState> 
     {
         TcpClient client;
         Stream stream;
         private byte[] receiveBuffer;
 
-        public ClientState State { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ClientState State { get => throw new NotImplementedException(); }
 
         public Client()
         {
-            this.client = new TcpClient("192.168.178.14", 8410);
+            this.client = new TcpClient(IPAddress.Loopback.ToString(), 42069);
             this.stream = this.client.GetStream();
+
+            this.receiveBuffer = new byte[1024];
             this.stream.BeginRead(this.receiveBuffer, 0, 1024, OnBytesReceived, null);
         }
 
@@ -48,6 +51,8 @@ namespace TwuilAppClient
             {
                 Utility.CalculateChecksum(buffer)
             });
+
+            this.stream.FlushAsync();
         }
 
         private void OnBytesReceived(IAsyncResult result)
@@ -62,6 +67,16 @@ namespace TwuilAppClient
         private void OnDataReceived(DNetworkPacket data)
         {
 
+        }
+
+        public void SetState(ClientState newState)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetState(Type newStateType)
+        {
+            throw new NotImplementedException();
         }
 
         public event MessageReceived OnMessageReceived;

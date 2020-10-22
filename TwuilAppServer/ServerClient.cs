@@ -87,6 +87,12 @@ namespace TwuilAppServer
                     {
                         Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
                     }
+
+                    this.receivedBytes = 0;
+                    this.receiveBuffer = new byte[6];
+                    this.receivePacketHeader = true;
+
+                    this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
                 else
                 {
@@ -96,9 +102,20 @@ namespace TwuilAppServer
 
         }
 
-        private void OnDataReceived(DNetworkPacket data)
+        private void OnDataReceived(DNetworkPacket packetRaw)
         {
-            Console.WriteLine($"Got packet of type: {data.type}");
+            Console.WriteLine($"Got packet of type: {packetRaw.type}");
+
+            
+            switch(packetRaw.type)
+            {
+                case nameof(DMessagePacket):
+                    {
+                        DNetworkPacket<DMessagePacket> packet = packetRaw.DataAsType<DMessagePacket>();
+                        Console.WriteLine($"Bericht van {packet.data.sender}: {packet.data.message}");
+                    }
+                    break;
+            }
         }
 
     }
