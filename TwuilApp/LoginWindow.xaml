@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
-        Title="TwuillApp" Height="733" Width="500"
-        Style="{StaticResource loginWindowStyle}"
+        Title="TwuillApp" Height="Auto" Width="500"
+        Style="{StaticResource LoginWindowStyle}"
         WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" AllowsTransparency="False">
     <Grid HorizontalAlignment="Center">
         <Grid.RowDefinitions>
@@ -22,28 +22,36 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="1" Style="{StaticResource TitleControlStyle}"> TwuillApp</TextBlock>
+        <TextBlock Grid.Row="1" Style="{StaticResource TitleControlStyle}">TwuillApp</TextBlock>
         
         <TextBlock Grid.Row="2" Style="{StaticResource SignInTitleControlStyle}">SIGN IN</TextBlock>
 
-        <TextBlock Grid.Row="3" Style="{StaticResource LabelControlStyle}">USERNAME</TextBlock>
+        <TextBlock Grid.Row="3" Style="{StaticResource LabelControlStyle}">SERVER-IP</TextBlock>
+
+        <TextBox Grid.Row="4" Style="{StaticResource InputControlStyle}" Name="ServerIpTextBox"></TextBox>
+
+        <TextBlock Grid.Row="5" Style="{StaticResource LabelControlStyle}">USERNAME</TextBlock>
         
-        <TextBox Grid.Row="4" Style="{StaticResource InputControlStyle}"></TextBox>
+        <TextBox Grid.Row="6" Style="{StaticResource InputControlStyle}" Name="UsernameTextBox"></TextBox>
         
-        <TextBlock Grid.Row="5" Style="{StaticResource LabelControlStyle}">PASSWORD</TextBlock>
+        <TextBlock Grid.Row="7" Style="{StaticResource LabelControlStyle}">PASSWORD</TextBlock>
 
-        <PasswordBox Grid.Row="6" Style="{StaticResource InputControlStyle}"></PasswordBox>
+        <PasswordBox Grid.Row="8" Style="{StaticResource InputControlStyle}" Name="PasswordTextBox"></PasswordBox>
 
-        <TextBlock Grid.Row="7" Style="{StaticResource LabelControlStyle}">SERVER-IP</TextBlock>
+        <Button Grid.Row="9" Style="{StaticResource ButtonSignStyle}" Name="SignInButton" Click="SignInButton_Click">SIGN IN</Button>
 
-        <TextBox Grid.Row="8" Style="{StaticResource InputControlStyle}"></TextBox>
+        <Button Grid.Row="10" Style="{StaticResource ButtonSignStyle}" Name="SignUpButton" Click="SignUpButton_Click">SIGN UP</Button>
 
-        <Button Grid.Row="9" Style="{StaticResource ButtonSignStyle}">SIGN IN</Button>
+        <Separator Grid.Row="11"/>
 
-        <Separator Grid.Row="10"/>
-
-        <Button Grid.Row="11" Style="{StaticResource ButtonPasswordStyle}"> Forgot Password?</Button>
+        <!--<Button Grid.Row="11" Style="{StaticResource ButtonPasswordStyle}">Forgot Password?</Button>-->
+        <Label Grid.Row="12" Style="{StaticResource ErrorBoxStyle}" Visibility="Visible" Name="ErrorMessageLabel">
+            <Viewbox StretchDirection="DownOnly" Stretch="Uniform">
+                <ContentControl Name="ErrorMessageContentControl"/>
+            </Viewbox>
+        </Label>
     </Grid>
 </Window>

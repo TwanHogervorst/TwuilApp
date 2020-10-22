@@ -56,5 +56,39 @@ namespace TwuilAppServer.States
             this.context.Send(response);
         }
 
+        public void SignUp(string username, string password)
+        {
+            DLoginResponsePacket response = new DLoginResponsePacket();
+
+            try
+            {
+                (bool, string) authenticationResult = this.server.CredentialsManager.CreateAccount(username, password);
+                if (authenticationResult.Item1)
+                {
+                    this.Username = username;
+                    this.context.SetState(typeof(ServerClientActiveState));
+
+                    Console.WriteLine($"Client {this.Username} signed up and logged in!");
+
+                    response.status = ResponsePacketStatus.Success;
+                    response.username = username;
+                }
+                else
+                {
+                    response.status = ResponsePacketStatus.Error;
+                    response.errorMessage = authenticationResult.Item2 ?? "Something went wrong while signing up.";
+                }
+            }
+            catch (Exception ex)
+            {
+                response.status = ResponsePacketStatus.Error;
+                response.errorMessage = "Internal server error";
+
+                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            }
+
+            this.context.Send(response);
+        }
+
     }
 }

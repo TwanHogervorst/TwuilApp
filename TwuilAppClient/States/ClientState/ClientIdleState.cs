@@ -24,5 +24,14 @@ namespace TwuilAppClient.States
                 password = password
             });
         }
+
+        public void SignUp(string username, string password)
+        {
+            this.context.Send(new DSignUpPacket
+            {
+                username = username,
+                password = password
+            });
+        }
     }
 }
