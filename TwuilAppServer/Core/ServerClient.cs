@@ -120,6 +120,7 @@ namespace TwuilAppServer.Core
             catch (Exception)
             {
                 // disconnected
+                Console.WriteLine($"Client {this.State.Username ?? this.client.Client.RemoteEndPoint.ToString()} disconnected!");
                 this.server.ClientManager.Remove(this);
                 this.client.Dispose();
                 return;
