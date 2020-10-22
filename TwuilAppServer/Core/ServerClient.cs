@@ -40,7 +40,7 @@ namespace TwuilAppServer.Core
 
             this.stream = this.client.GetStream();
 
-            this.State = new ServerClientIdleState(this);
+            this.State = new ServerClientIdleState(this, this.server);
 
             this.receivedBytes = 0;
             this.receiveBuffer = new byte[6];

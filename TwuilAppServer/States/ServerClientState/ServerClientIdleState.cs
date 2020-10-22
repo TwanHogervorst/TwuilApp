@@ -14,10 +14,12 @@ namespace TwuilAppServer.States
         public string Username { get; private set; } = null;
 
         private ServerClient context;
+        private Server server;
 
-        public ServerClientIdleState(ServerClient context)
+        public ServerClientIdleState(ServerClient context, Server server)
         {
             this.context = context;
+            this.server = server;
         }
 
         public void Login(string username, string password)
@@ -26,7 +28,8 @@ namespace TwuilAppServer.States
 
             try
             {
-                if (username == password)
+                (bool, string) authenticationResult = this.server.CredentialsManager.Authenticate(username, password);
+                if (authenticationResult.Item1)
                 {
                     this.Username = username;
                     this.context.SetState(typeof(ServerClientActiveState));
@@ -39,7 +42,7 @@ namespace TwuilAppServer.States
                 else
                 {
                     response.status = ResponsePacketStatus.Error;
-                    response.errorMessage = "Username and/or password is incorrect.";
+                    response.errorMessage = authenticationResult.Item2 ?? "Something went wrong while authenticating.";
                 }
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ namespace TwuilAppClient
             client.OnPrivateMessageSendResponse += Client_OnPrivateMessageSendResponse;
             client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
 
-            client.Send(new DLoginPacket { username = "test", password = "test" });
+            client.Send(new DLoginPacket { username = "henk", password = "henk" });
 
             Console.WriteLine("Login Send!");
 
