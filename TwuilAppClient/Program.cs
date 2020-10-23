@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using TwuilAppClient.Core;
@@ -25,6 +26,10 @@ namespace TwuilAppClient
             client.OnServerClosing += Client_OnServerClosing;
             client.OnPrivateMessageSendResponse += Client_OnPrivateMessageSendResponse;
             client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
+            client.OnGroupCreatedResponse += Client_OnGroupCreatedResponse;
+            client.OnGroupJoin += Client_OnGroupJoin;
+            client.OnGroupMesssageReceived += Client_OnGroupMesssageReceived;
+            client.OnGroupMessageSendResponse += Client_OnGroupMessageSendResponse;
 
             client.Login(username, password);
 
@@ -34,15 +39,37 @@ namespace TwuilAppClient
 
             Console.WriteLine("Message Send!");*/
 
-            string cmd;
-            while ((cmd = Console.ReadLine()).ToLower() != "quit")
-            {
-                string[] msg = cmd.Split(';');
+            while (!client.IsActive) Thread.Sleep(10);
 
-                if(msg.Length > 1) client.SendPrivateMessage(msg[0], msg.Skip(1).Aggregate("", (accu, elem) => accu + ";" + elem));
+            client.CreateGroup("testGroup", new List<string> { "test", "twan", "oegaboega" }, "Dit is een test groep!");
+
+            string msg;
+            while ((msg = Console.ReadLine()).ToLower() != "quit")
+            {
+                client.SendGroupMessage("testGroup", msg);
             }
 
             client.Dispose();
+        }
+
+        private static void Client_OnGroupMessageSendResponse(Client sender, bool success, string errorMessage)
+        {
+            Console.WriteLine($"GroupMessageSendResponse => success={success}; errorMessage={errorMessage ?? "NULL"}");
+        }
+
+        private static void Client_OnGroupMesssageReceived(Client sender, string messageSender, string groupName, string message)
+        {
+            Console.WriteLine($"GroupMessageReceived => messageSender={messageSender}; groupName={groupName}; message={message}");
+        }
+
+        private static void Client_OnGroupJoin(Client sender, string groupName, List<string> usersInGroup, string welcomeMessage)
+        {
+            Console.WriteLine($"GroupJoin => groupName={groupName}; usersInGroup={string.Join(", ", usersInGroup)}; welcomeMessage={welcomeMessage}");
+        }
+
+        private static void Client_OnGroupCreatedResponse(Client sender, bool success, string errorMessage)
+        {
+            Console.WriteLine($"PrivateMessageSendResponse => success={success}; errorMessage={errorMessage ?? "NULL"}");
         }
 
         private static void Client_OnPrivateMessageReceived(Client sender, string messageSender, string message)
@@ -58,6 +85,8 @@ namespace TwuilAppClient
         private static void Client_OnServerClosing(Client sender, string reason)
         {
             Console.WriteLine($"ServerClosing => reason={reason ?? "NULL"}");
+
+            Console.ReadLine();
 
             Environment.Exit(0);
         }
