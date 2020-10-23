@@ -99,6 +99,37 @@ namespace TwuilAppLib.Data
 
     }
 
+    public class DGroupCreatePacket : DAbstract
+    {
+        public string groupName;
+        public List<string> usersToAdd = new List<string>();
+        public string welcomeMessage;
+    }
+
+    public class DGroupCreateResponsePacket : DNetworkResponsePacket
+    {
+
+    }
+
+    public class DGroupChatJoinPacket : DAbstract
+    {
+        public string groupName;
+        public List<string> usersInGroup = new List<string>();
+        public string welcomeMessage;
+    }
+
+    public class DGroupChatMessagePacket : DAbstract
+    {
+        public string sender;
+        public string groupName;
+        public string message;
+    }
+
+    public class DGroupMessageSendResponsePacket : DNetworkResponsePacket
+    {
+
+    }
+
     public enum ResponsePacketStatus
     {
         Success,

@@ -55,7 +55,7 @@ namespace TwuilAppServer.Core
                 result = false;
                 errorMessage = "Password is incorrect.";
             }
-            if(result && this.server.ClientManager.Contains(username))
+            if(result && this.server.ServerClientManager.UserIsOnline(username))
             {
                 result = false;
                 errorMessage = $"The user '{username}' is already logged in.";

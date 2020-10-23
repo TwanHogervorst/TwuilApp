@@ -24,5 +24,15 @@ namespace TwuilAppServer.States
 
         }
 
+        void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
+        {
+
+        }
+
+        void SendGroupMessage(string groupName, string message)
+        {
+
+        }
+
     }
 }
