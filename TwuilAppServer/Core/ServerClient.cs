@@ -121,7 +121,7 @@ namespace TwuilAppServer.Core
             {
                 // disconnected
                 Console.WriteLine($"Client {this.State.Username ?? this.client.Client.RemoteEndPoint.ToString()} disconnected!");
-                this.server.ClientManager.Remove(this);
+                this.server.ServerClientManager.Remove(this);
                 this.client.Dispose();
                 return;
             }
@@ -183,6 +183,7 @@ namespace TwuilAppServer.Core
 
             switch(packetRaw.type)
             {
+                // Authentication
                 case nameof(DLoginPacket):
                     {
                         DNetworkPacket<DLoginPacket> packet = packetRaw.DataAsType<DLoginPacket>();
@@ -197,17 +198,33 @@ namespace TwuilAppServer.Core
                         this.SignUp(packet.data.username, packet.data.password);
                     }
                     break;
+                // Private Message
                 case nameof(DPrivateMessagePacket):
                     {
                         DNetworkPacket<DPrivateMessagePacket> packet = packetRaw.DataAsType<DPrivateMessagePacket>();
 
-                        Console.WriteLine($"Bericht van {packet.data.sender} naar {packet.data.receiver}: {packet.data.message}");
                         this.SendPrivateMessage(packet.data.receiver, packet.data.message);
                     }
                     break;
+                // Group
+                case nameof(DGroupCreatePacket):
+                    {
+                        DNetworkPacket<DGroupCreatePacket> packet = packetRaw.DataAsType<DGroupCreatePacket>();
+
+                        this.CreateGroup(packet.data.groupName, packet.data.usersToAdd, packet.data.welcomeMessage);
+                    }
+                    break;
+                case nameof(DGroupChatMessagePacket):
+                    {
+                        DNetworkPacket<DGroupChatMessagePacket> packet = packetRaw.DataAsType<DGroupChatMessagePacket>();
+
+                        this.SendGroupMessage(packet.data.groupName, packet.data.message);
+                    }
+                    break;
+                // Disconnect
                 case nameof(DClientDisconnectPacket):
                     {
-                        this.server.ClientManager.Remove(this);
+                        this.server.ServerClientManager.Remove(this);
 
                         Console.WriteLine($"Client {this.State.Username ?? this.client.Client.RemoteEndPoint.ToString()} disconnected!");
 
@@ -232,6 +249,16 @@ namespace TwuilAppServer.Core
         {
             this.State.SendPrivateMessage(receiver, message);
         }
-        
+
+        private void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
+        {
+            this.State.CreateGroup(groupName, usersToAdd, welcomeMessage);
+        }
+
+        private void SendGroupMessage(string groupName, string message)
+        {
+            this.State.SendGroupMessage(groupName, message);
+        }
+
     }
 }
