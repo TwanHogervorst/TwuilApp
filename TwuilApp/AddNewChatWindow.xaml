@@ -1,0 +1,30 @@
+﻿<Window x:Class="TwuilApp.AddNewChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TwuilApp"
+        mc:Ignorable="d"
+        Title="AddNewChatWindow" Height="250" Width="500" 
+        WindowStartupLocation="CenterOwner"
+        Style="{StaticResource LoginWindowStyle}" Closing="Window_Closing"
+        ResizeMode="NoResize">
+
+    <Grid HorizontalAlignment="Center" Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="48*"/>
+            <ColumnDefinition Width="127*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Style="{StaticResource LabelControlStyle}" Grid.ColumnSpan="2">USER:</TextBlock>
+
+        <TextBox Style="{StaticResource InputControlStyle}" Name="UserTextBox" Grid.ColumnSpan="2" Margin="0,56,0,0" Grid.RowSpan="2" KeyUp="UserTextBox_KeyUp"/>
+
+        <Button Grid.Row="2" Style="{StaticResource ButtonSignStyle}" Name="AddNewChatButton" Click="AddNewChatButton_Click" Grid.ColumnSpan="2">ADD NEW CHAT</Button>
+    </Grid>
+</Window>

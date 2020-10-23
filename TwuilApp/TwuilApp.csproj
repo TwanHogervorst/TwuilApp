@@ -7,7 +7,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\add-group.png" />
+    <None Remove="Resources\add-groupchat.png" />
+    <None Remove="Resources\send-arrow.png" />
+    <None Remove="Resources\twuillappbackground.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TwuilAppClient\TwuilAppClient.csproj" />
     <ProjectReference Include="..\TwuilAppLib\TwuilAppLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\add-group.png" />
+    <Resource Include="Resources\add-groupchat.png" />
+    <Resource Include="Resources\send-arrow.png" />
+    <Resource Include="Resources\twuillappbackground.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="assets\TwuillAppBackground.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
