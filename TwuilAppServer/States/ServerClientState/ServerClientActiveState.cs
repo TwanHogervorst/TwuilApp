@@ -51,5 +51,19 @@ namespace TwuilAppServer.States
             this.context.Send(response);
         }
 
+        public void SendGroupMessage(string groupName, string message)
+        {
+            DGroupMessageSendResponsePacket response = new DGroupMessageSendResponsePacket();
+
+            (bool, string) result = this.server.ChatManager.SendGroupMessage(this.Username, groupName, message);
+
+            response.status = result.Item1 ? ResponsePacketStatus.Success : ResponsePacketStatus.Error;
+            response.errorMessage = result.Item2;
+
+            if (result.Item1) Console.WriteLine($"Group message from {this.Username} to {groupName}: {message}");
+
+            this.context.Send(response);
+        }
+
     }
 }

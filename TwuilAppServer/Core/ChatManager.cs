@@ -112,13 +112,13 @@ namespace TwuilAppServer.Core
                                 welcomeMessage = welcomeMessage
                             };
 
-                            foreach (string onlineUser in onlineUserList)
-                            {
-                                if (this.server.ServerClientManager.TryGetClientByUsername(onlineUser, out ServerClient client))
-                                {
-                                    client.Send(groupChatJoinPacket);
-                                }
-                            }
+                            List<ServerClient> clientList = onlineUserList.Select(u => 
+                            { 
+                                if (this.server.ServerClientManager.TryGetClientByUsername(u, out ServerClient c)) return c;
+                                else return null; 
+                            }).ToList();
+
+                            this.server.SendToClients(clientList, groupChatJoinPacket);
                         }
                         catch
                         {
@@ -138,6 +138,53 @@ namespace TwuilAppServer.Core
                 {
                     result = false;
                     errorMessage = $"The group '{groupName}' already exists.";
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                errorMessage = "Internal server error";
+
+                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
+            }
+
+            return (result, errorMessage);
+        }
+
+        public (bool, string) SendGroupMessage(string from, string toGroup, string message)
+        {
+            bool result = false;
+            string errorMessage = null;
+
+            try
+            {
+                if(this.usersByGroupname.TryGetValue(toGroup, out List<string> usersInGroup))
+                {
+                    if(usersInGroup.Contains(from))
+                    {
+                        List<ServerClient> clientList = usersInGroup.Where(u => u != from)
+                            .Where(u => this.server.ServerClientManager.UserIsOnline(u))
+                            .Select(u => { if (this.server.ServerClientManager.TryGetClientByUsername(u, out ServerClient c)) return c; else return null; }).ToList();
+
+                        DGroupChatMessagePacket groupChatMessagePacket = new DGroupChatMessagePacket
+                        {
+                            sender = from,
+                            groupName = toGroup,
+                            message = message
+                        };
+
+                        this.server.SendToClients(clientList, groupChatMessagePacket);
+
+                        result = true;
+                    }
+                    else
+                    {
+                        errorMessage = $"User {from} is not allowed to send messages to group {toGroup}";
+                    }
+                }
+                else
+                {
+                    errorMessage = $"The group {toGroup} does not exist";
                 }
             }
             catch (Exception ex)

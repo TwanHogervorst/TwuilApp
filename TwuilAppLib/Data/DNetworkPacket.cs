@@ -118,6 +118,18 @@ namespace TwuilAppLib.Data
         public string welcomeMessage;
     }
 
+    public class DGroupChatMessagePacket : DAbstract
+    {
+        public string sender;
+        public string groupName;
+        public string message;
+    }
+
+    public class DGroupMessageSendResponsePacket : DNetworkResponsePacket
+    {
+
+    }
+
     public enum ResponsePacketStatus
     {
         Success,

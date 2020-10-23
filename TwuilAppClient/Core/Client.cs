@@ -28,6 +28,8 @@ namespace TwuilAppClient.Core
         public event ServerResponseReceived OnPrivateMessageSendResponse;
         public event ServerResponseReceived OnGroupCreatedResponse;
         public event GroupJoinReceived OnGroupJoin;
+        public event ServerResponseReceived OnGroupMessageSendResponse;
+        public event GroupMessageReceived OnGroupMesssageReceived;
 
         private TcpClient client;
         private Stream stream;
@@ -193,6 +195,20 @@ namespace TwuilAppClient.Core
                         this.OnGroupJoin?.Invoke(this, packet.data.groupName, packet.data.usersInGroup, packet.data.welcomeMessage);
                     }
                     break;
+                case nameof(DGroupChatMessagePacket):
+                    {
+                        DNetworkPacket<DGroupChatMessagePacket> packet = packetRaw.DataAsType<DGroupChatMessagePacket>();
+
+                        this.OnGroupMesssageReceived?.Invoke(this, packet.data.sender, packet.data.groupName, packet.data.message);
+                    }
+                    break;
+                case nameof(DGroupMessageSendResponsePacket): 
+                    {
+                        DNetworkPacket<DGroupMessageSendResponsePacket> packet = packetRaw.DataAsType<DGroupMessageSendResponsePacket>();
+
+                        this.OnGroupMessageSendResponse?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
+                    }
+                    break;
                 case nameof(DServerClosingPacket):
                     {
                         DNetworkPacket<DServerClosingPacket> packet = packetRaw.DataAsType<DServerClosingPacket>();
@@ -242,6 +258,11 @@ namespace TwuilAppClient.Core
             if (this.Connected) this.State.CreateGroup(groupName, usersToAdd, welcomeMessage);
         }
 
+        public void SendGroupMessage(string groupName, string message)
+        {
+            if (this.Connected) this.State.SendGroupMessage(groupName, message);
+        }
+             
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -281,4 +302,5 @@ namespace TwuilAppClient.Core
     public delegate void PrivateMessageReceived(Client sender, string messageSender, string message);
     public delegate void ServerClosingReceived(Client sender, string reason);
     public delegate void GroupJoinReceived(Client sender, string groupName, List<string> usersInGroup, string welcomeMessage);
+    public delegate void GroupMessageReceived(Client sender, string messageSender, string groupName, string message);
 }

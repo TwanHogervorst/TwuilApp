@@ -214,6 +214,13 @@ namespace TwuilAppServer.Core
                         this.CreateGroup(packet.data.groupName, packet.data.usersToAdd, packet.data.welcomeMessage);
                     }
                     break;
+                case nameof(DGroupChatMessagePacket):
+                    {
+                        DNetworkPacket<DGroupChatMessagePacket> packet = packetRaw.DataAsType<DGroupChatMessagePacket>();
+
+                        this.SendGroupMessage(packet.data.groupName, packet.data.message);
+                    }
+                    break;
                 // Disconnect
                 case nameof(DClientDisconnectPacket):
                     {
@@ -246,6 +253,11 @@ namespace TwuilAppServer.Core
         private void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
         {
             this.State.CreateGroup(groupName, usersToAdd, welcomeMessage);
+        }
+
+        private void SendGroupMessage(string groupName, string message)
+        {
+            this.State.SendGroupMessage(groupName, message);
         }
 
     }

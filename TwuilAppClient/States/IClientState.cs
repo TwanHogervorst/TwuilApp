@@ -23,5 +23,9 @@ namespace TwuilAppClient.States
         {
         }
 
+        void SendGroupMessage(string groupName, string message)
+        {
+        }
+
     }
 }

@@ -37,5 +37,15 @@ namespace TwuilAppClient.States
             });
         }
 
+        public void SendGroupMessage(string groupName, string message)
+        {
+            this.context.Send(new DGroupChatMessagePacket 
+            { 
+                sender = this.context.Username,
+                groupName = groupName,
+                message = message
+            });
+        }
+
     }
 }
