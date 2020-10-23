@@ -52,6 +52,12 @@
             <Setter Property="Padding" Value="0,0,0,2"/>
         </Style>
 
+        <Style x:Key="NewChatLabelControlStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#aaa"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
         <Style x:Key="InputControlStyle">
             <Setter Property="Control.Foreground" Value="White"/>
             <Setter Property="Control.FontSize" Value="20"/>
@@ -142,11 +148,33 @@
             </Setter>
         </Style>
 
+        <Style x:Key="ButtonAddUsersStyle" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Background="#aaa">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="ChatTextBlockStyle" TargetType="TextBlock">
             <Setter Property="Padding" Value="5,0,0,0"/>
             <Setter Property="FontSize" Value="15"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Foreground" Value="#8d9194"/>
+        </Style>
+
+        <Style x:Key="HorizontalScrollViewerStyle" TargetType="ScrollViewer">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Width" Value="Auto"/>
         </Style>
 
     </Application.Resources>
