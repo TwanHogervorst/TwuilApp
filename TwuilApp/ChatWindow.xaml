@@ -20,8 +20,18 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0">
-                <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="AddGroupButton" Grid.RowSpan="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource ButtonChatStyle}" Name="AddChatButton" Grid.RowSpan="2">
                     <Image Source="pack://application:,,,/Resources/add-group.png"/>
+                </Button>
+
+                <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="AddGroupChatButton" Grid.RowSpan="2">
+                    <Image Source="pack://application:,,,/Resources/add-groupchat.png"/>
                 </Button>
             </Grid>
             
