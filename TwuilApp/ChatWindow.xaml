@@ -34,26 +34,24 @@
                     <Image Source="pack://application:,,,/Resources/add-groupchat.png"/>
                 </Button>
             </Grid>
-            
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-                <ListView Name="ChatItemControl" Background="#00000000" HorizontalContentAlignment="Stretch" SelectionChanged="ChatItemControl_SelectionChanged">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="#424649" BorderThickness="1">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="20"/>
-                                    </Grid.RowDefinitions>
 
-                                    <TextBlock Grid.Row="0" Style="{StaticResource ChatTextBlockStyle}" Text="{Binding ChatName}" />
-                                    <TextBlock Grid.Row="1" Padding="5,0,0,0" Foreground="#8d9194" Text="{Binding LastMessage}"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </ScrollViewer>
+            <ListView Grid.Row="1" Name="ChatItemControl" Background="#00000000" HorizontalContentAlignment="Stretch" SelectionChanged="ChatItemControl_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#424649" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Style="{StaticResource ChatTextBlockStyle}" Text="{Binding ChatName}" />
+                                <TextBlock Grid.Row="1" Padding="5,0,0,0" Foreground="#8d9194" Text="{Binding LastMessage}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
 
         <Grid Grid.Column="1">

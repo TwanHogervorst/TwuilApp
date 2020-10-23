@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
-        Title="AddNewChatWindow" Height="200" Width="500"
+        Title="AddNewChatWindow" Height="Auto" Width="Auto" 
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource LoginWindowStyle}" Closing="Window_Closing"
         ResizeMode="NoResize">
 
-    <Grid HorizontalAlignment="Center">
+    <Grid HorizontalAlignment="Center" Margin="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="48*"/>
             <ColumnDefinition Width="127*"/>

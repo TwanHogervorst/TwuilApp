@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
-        Title="New Group" Height="500" Width="250"
+        Title="New Group" Height="Auto" Width="Auto"
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource LoginWindowStyle}"
         ResizeMode="NoResize">
-    
-    <Grid HorizontalAlignment="Center" Width="250">
+
+    <Grid HorizontalAlignment="Center" Width="250" Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"/>
             <RowDefinition Height="50"/>
@@ -20,7 +20,7 @@
 
         <TextBlock Grid.Row="0" Style="{StaticResource NewChatLabelControlStyle}">ADD USERS</TextBlock>
 
-        <ListView Grid.Row="2" Name="UsernameListView" Background="#00000000" HorizontalContentAlignment="Stretch" SelectionMode="Multiple" />
+        <ListView Grid.Row="2" Name="UsernameListView" Background="#00000000" Foreground="White" HorizontalContentAlignment="Stretch" SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
