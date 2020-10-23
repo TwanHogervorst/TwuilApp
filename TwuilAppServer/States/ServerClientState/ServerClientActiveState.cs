@@ -25,7 +25,7 @@ namespace TwuilAppServer.States
 
         public void SendPrivateMessage(string receiver, string message)
         {
-            DPrivateMessageSendResponse response = new DPrivateMessageSendResponse();
+            DPrivateMessageSendResponsePacket response = new DPrivateMessageSendResponsePacket();
 
             (bool, string) result = this.server.ChatManager.SendPrivate(this.Username, receiver, message);
 

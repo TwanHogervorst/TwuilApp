@@ -94,7 +94,7 @@ namespace TwuilAppLib.Data
 
     }
 
-    public class DPrivateMessageSendResponse : DNetworkResponsePacket
+    public class DPrivateMessageSendResponsePacket : DNetworkResponsePacket
     {
 
     }

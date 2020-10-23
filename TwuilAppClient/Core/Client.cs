@@ -176,9 +176,9 @@ namespace TwuilAppClient.Core
                         this.OnPrivateMessageReceived?.Invoke(this, packet.data.sender, packet.data.message);
                     }
                     break;
-                case nameof(DPrivateMessageSendResponse):
+                case nameof(DPrivateMessageSendResponsePacket):
                     {
-                        DNetworkPacket<DPrivateMessageSendResponse> packet = packetRaw.DataAsType<DPrivateMessageSendResponse>();
+                        DNetworkPacket<DPrivateMessageSendResponsePacket> packet = packetRaw.DataAsType<DPrivateMessageSendResponsePacket>();
 
                         this.OnPrivateMessageSendResponse?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
                     }
