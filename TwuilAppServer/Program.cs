@@ -9,7 +9,7 @@ namespace TwuilAppServer
     {
         static void Main(string[] args)
         {
-            Server server = new Server(Constants.SERVER_PORT);
+            Server server = new Server(Constants.IP_ADDRESS, Constants.SERVER_PORT);
 
             Console.WriteLine("Server Started!");
 

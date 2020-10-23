@@ -7,6 +7,7 @@ namespace TwuilAppServer
     static class Constants
     {
 
+        public const string IP_ADDRESS = "192.168.1.41";
         public const ushort SERVER_PORT = 42069;
 
     }

@@ -18,13 +18,13 @@ namespace TwuilAppServer.Core
 
         private bool disposed;
 
-        public Server(ushort port)
+        public Server(string ip, ushort port)
         {
             this.ServerClientManager = new ServerClientManager();
             this.CredentialsManager = new CredentialsManager(this);
             this.ChatManager = new ChatManager(this);
 
-            this.listener = new TcpListener(IPAddress.Loopback, port);
+            this.listener = new TcpListener(IPAddress.Parse(ip), port);
             this.listener.Start();
             this.listener.BeginAcceptTcpClient(this.OnClientAccepted, null);
         }
