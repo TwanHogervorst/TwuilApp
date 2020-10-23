@@ -55,28 +55,31 @@ namespace TwuilAppClient.Core
 
         internal void Send(DAbstract data)
         {
-            DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+            if(this.Connected)
             {
-                type = data.GetType().Name,
-                data = data
-            };
+                DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+                {
+                    type = data.GetType().Name,
+                    data = data
+                };
 
-            byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
-            this.stream.Write(new byte[]
-            {
+                byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
+                this.stream.Write(new byte[]
+                {
                 0x69
-            });
-            this.stream.Write(BitConverter.GetBytes(buffer.Length));
-            this.stream.Write(new byte[]{
-                new PacketFlags().Result()
-            });
-            this.stream.Write(buffer);
-            this.stream.Write(new byte[]
-            {
+                });
+                this.stream.Write(BitConverter.GetBytes(buffer.Length));
+                this.stream.Write(new byte[]{
+                    new PacketFlags().Result()
+                });
+                this.stream.Write(buffer);
+                this.stream.Write(new byte[]
+                {
                 Utility.CalculateChecksum(buffer)
-            });
+                });
 
-            this.stream.Flush();
+                this.stream.Flush();
+            }
         }
 
         private void OnBytesReceived(IAsyncResult result)

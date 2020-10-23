@@ -81,11 +81,10 @@
                     </Grid.ColumnDefinitions>
 
                     <Border  CornerRadius="15" Background="#424649">
-                        <!--<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-                        <TextBox Grid.Column="0" Grid.Row="0" Style="{StaticResource ChatBoxStyle}" Name="ChatTextBox" />
+                        <TextBox Grid.Column="0" Grid.Row="0" Style="{StaticResource ChatBoxStyle}" Name="ChatTextBox" KeyUp="ChatTextBox_KeyUp" />
                     </Border>
                     
-                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonChatStyle}" Name="SendMessageButton">
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonChatStyle}" Name="SendMessageButton" Click="SendMessageButton_Click">
                         <Image Source="pack://application:,,,/Resources/send-arrow.png"/>
                     </Button>
                 </Grid>

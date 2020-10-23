@@ -148,7 +148,15 @@ namespace TwuilApp
         {
             if(success)
             {
-                MessageBox.Show("Login successfull!", "Login success", MessageBoxButton.OK);
+                this.client.OnLoginResponseReceived -= this.Client_OnLoginResponseReceived;
+                this.client.OnServerClosing -= this.Client_OnServerClosing;
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    ChatWindow chatWindow = new ChatWindow(this.client);
+                    chatWindow.Show();
+                    this.Close();
+                });
             }
             else
             {
