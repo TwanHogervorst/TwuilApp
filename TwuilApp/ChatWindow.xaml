@@ -22,15 +22,15 @@
             <Grid Grid.Row="0">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="35"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Grid.Column="0" Style="{StaticResource ButtonChatStyle}" Name="AddChatButton" Grid.RowSpan="2">
+                <Button Grid.Column="0" Style="{StaticResource ButtonChatStyle}" Name="AddChatButton">
                     <Image Source="pack://application:,,,/Resources/add-group.png"/>
                 </Button>
 
-                <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="AddGroupChatButton" Grid.RowSpan="2">
+                <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="AddGroupChatButton">
                     <Image Source="pack://application:,,,/Resources/add-groupchat.png"/>
                 </Button>
             </Grid>
@@ -61,7 +61,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Row="0" FontSize="35" Text="" Padding="10, 0, 0, 0"/>
@@ -72,16 +72,20 @@
 
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="14*"/>
-                        <RowDefinition Height="11*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Style="{StaticResource ChatBoxStyle}" Name="ChatTextBox" VerticalContentAlignment="Center" Padding="3" Grid.RowSpan="2" />
-                    <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="SendMessageButton" Grid.RowSpan="2">
+                    <Border  CornerRadius="15" Background="#424649">
+                        <!--<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+                        <TextBox Grid.Column="0" Grid.Row="0" Style="{StaticResource ChatBoxStyle}" Name="ChatTextBox" />
+                    </Border>
+                    
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonChatStyle}" Name="SendMessageButton">
                         <Image Source="pack://application:,,,/Resources/send-arrow.png"/>
                     </Button>
                 </Grid>

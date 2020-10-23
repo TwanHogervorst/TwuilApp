@@ -109,28 +109,34 @@
         </Style>
 
         <Style x:Key="ChatBoxStyle" TargetType="TextBox">
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="Control.Padding" Value="5,5,0,0"/>
-            <Setter Property="Template">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10, 0, 10, 0"/>
+            <Setter Property="Background">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border CornerRadius="15" Background="#424649">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
+                    <SolidColorBrush Color="White" Opacity="0"/>
                 </Setter.Value>
             </Setter>
+            <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
         <Style x:Key="ButtonChatStyle" TargetType="Button">
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Width" Value="25"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="15">
+                        <Border Name="border" CornerRadius="15" Background="#424649" Padding="5">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#8d9194" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
