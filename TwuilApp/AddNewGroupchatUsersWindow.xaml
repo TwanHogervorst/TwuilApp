@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
-        Title="New Group" Height="Auto" Width="Auto"
+        Title="New Group" Height="560" Width="400"
         WindowStartupLocation="CenterOwner"
         Style="{StaticResource LoginWindowStyle}"
         ResizeMode="NoResize">
