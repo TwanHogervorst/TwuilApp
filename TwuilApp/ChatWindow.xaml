@@ -64,8 +64,26 @@
 
                 <TextBlock Name="ChatTitleTextBlock" Grid.Row="0" FontSize="35" Foreground="#8d9194" Padding="10, 0, 0, 0"/>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden">
-                    <!-- TODO Show Chat Messages -->
+                <ScrollViewer Name="MessageScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden">
+
+                    <ItemsControl Name="ChatMessagesItemControl" Height="Auto" HorizontalAlignment="Stretch">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#424649" BorderThickness="1" Width="Auto" Height="Auto" Padding="3">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Foreground="White" FontSize="13" FontWeight="SemiBold" Text="{Binding Sender}" />
+                                        <TextBlock Grid.Row="1" Foreground="White" FontSize="13" Text="{Binding Message}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
                 </ScrollViewer>
 
                 <Grid Grid.Row="2">

@@ -50,7 +50,7 @@ namespace TwuilAppClient.Core
             this.receiveBuffer = new byte[6];
             this.receivePacketHeader = true;
 
-            this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+            if (this.Connected) this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
         }
 
         internal void Send(DAbstract data)
@@ -99,7 +99,7 @@ namespace TwuilAppClient.Core
 
             if (this.receivedBytes < this.receiveBuffer.Length)
             {
-                this.stream.BeginRead(this.receiveBuffer, receivedBytes, this.receiveBuffer.Length - this.receivedBytes, this.OnBytesReceived, null);
+                if (this.Connected) this.stream.BeginRead(this.receiveBuffer, receivedBytes, this.receiveBuffer.Length - this.receivedBytes, this.OnBytesReceived, null);
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace TwuilAppClient.Core
                     this.receiveBuffer = new byte[length + 1];
                     this.receivePacketHeader = false;
 
-                    this.stream.BeginRead(this.receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                    if (this.Connected) this.stream.BeginRead(this.receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
             }
             else
@@ -138,7 +138,7 @@ namespace TwuilAppClient.Core
                     this.receiveBuffer = new byte[6];
                     this.receivePacketHeader = true;
 
-                    this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                    if(this.Connected) this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
                 else
                 {

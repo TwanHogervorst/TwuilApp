@@ -34,7 +34,7 @@
             </Button>
         </Grid>
         
-        <ListView Grid.Row="2" Name="UsernameListView" Foreground="White" Background="#00000000" HorizontalContentAlignment="Stretch" Height="200" />
+        <ListView Grid.Row="2" Name="UsernameListView" Foreground="White" Background="#00000000" HorizontalContentAlignment="Stretch" Height="200" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
     </Grid>
 </Window>

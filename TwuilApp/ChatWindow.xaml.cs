@@ -35,8 +35,12 @@ namespace TwuilApp
 
                 if(this._currentOpenChat != null)
                 {
-                    this.ChatTitleTextBlock.Text = this._currentOpenChat.ChatName;
-                    this.ChatItemControl.SelectedItem = this._currentOpenChat;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.ChatTitleTextBlock.Text = this._currentOpenChat.ChatName;
+                        this.ChatItemControl.SelectedItem = this._currentOpenChat;
+                        this.ShowChats();
+                    });
                 }
             }
         }
@@ -67,6 +71,7 @@ namespace TwuilApp
             this.Dispatcher.Invoke(() =>
             {
                 this.ChatItemControl.ItemsSource = sender.ChatItems;
+                if (chatName == this.CurrentOpenChat?.ChatName) this.ShowChats();
             });
         }
 
@@ -166,6 +171,14 @@ namespace TwuilApp
         private void ChatItemControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.CurrentOpenChat = (DChatItem)this.ChatItemControl.SelectedItem;
+        }
+
+        private void ShowChats()
+        {
+            this.ChatMessagesItemControl.ItemsSource = null;
+            this.ChatMessagesItemControl.ItemsSource = this.CurrentOpenChat.Messages;
+
+            this.MessageScrollViewer.ScrollToBottom();
         }
     }
 }

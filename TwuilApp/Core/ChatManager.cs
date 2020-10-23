@@ -48,7 +48,7 @@ namespace TwuilApp.Core
 
             if (!this.chatByUsername.TryGetValue(messageSender, out chat)) this.chatByUsername.Add(messageSender, chat = new DChatItem { ChatName = messageSender, IsGroup = false });
 
-            chat.Messages.Add(new DChatMessage { sender = messageSender, message = message });
+            chat.Messages.Add(new DChatMessage { Sender = messageSender, Message = message });
             this.OnChatUpdate?.Invoke(this, messageSender);
         }
 
@@ -58,7 +58,7 @@ namespace TwuilApp.Core
 
             if (!this.groupByGroupName.TryGetValue(groupName, out chat)) this.groupByGroupName.Add(groupName, chat = new DChatItem { ChatName = groupName, IsGroup = true });
 
-            chat.Messages.Add(new DChatMessage { sender = messageSender, message = message });
+            chat.Messages.Add(new DChatMessage { Sender = messageSender, Message = message });
             this.OnChatUpdate?.Invoke(this, groupName);
         }
 
@@ -68,7 +68,7 @@ namespace TwuilApp.Core
 
             if (!this.groupByGroupName.TryGetValue(groupName, out chat)) this.groupByGroupName.Add(groupName, chat = new DChatItem { ChatName = groupName, IsGroup = true });
 
-            chat.Messages.Add(new DChatMessage { message = welcomeMessage });
+            chat.Messages.Add(new DChatMessage { Message = welcomeMessage });
             this.OnChatUpdate?.Invoke(this, groupName);
         }
 
@@ -98,7 +98,7 @@ namespace TwuilApp.Core
 
             if (!this.chatByUsername.TryGetValue(username, out chat)) chat = new DChatItem { ChatName = username, IsGroup = false };
 
-            chat.Messages.Add(new DChatMessage { sender = this.client.Username, message = message });
+            chat.Messages.Add(new DChatMessage { Sender = this.client.Username, Message = message });
             this.OnChatUpdate?.Invoke(this, username);
         }
 
@@ -110,7 +110,7 @@ namespace TwuilApp.Core
 
             if (!this.groupByGroupName.TryGetValue(groupName, out chat)) chat = new DChatItem { ChatName = groupName, IsGroup = true };
 
-            chat.Messages.Add(new DChatMessage { sender = this.client.Username, message = message });
+            chat.Messages.Add(new DChatMessage { Sender = this.client.Username, Message = message });
             this.OnChatUpdate?.Invoke(this, groupName);
         }
 
