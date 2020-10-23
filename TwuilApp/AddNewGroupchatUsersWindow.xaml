@@ -1,0 +1,40 @@
+﻿<Window x:Class="TwuilApp.AddNewGroupchatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TwuilApp"
+        mc:Ignorable="d"
+        Title="New Group" Height="Auto" Width="Auto"
+        WindowStartupLocation="CenterOwner"
+        Style="{StaticResource LoginWindowStyle}"
+        ResizeMode="NoResize">
+
+    <Grid HorizontalAlignment="Center" Width="250" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="370"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Style="{StaticResource NewChatLabelControlStyle}">ADD USERS</TextBlock>
+
+        <ListView Grid.Row="2" Name="UsernameListView" Background="#00000000" Foreground="White" HorizontalContentAlignment="Stretch" SelectionMode="Multiple" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddUsersButton" Grid.RowSpan="2" Click="AddUsersButton_Click">
+                <Image Source="pack://application:,,,/Resources/send-arrow.png" Height="38" RenderTransformOrigin="0.556,0.173"/>
+            </Button>
+        </Grid>
+
+    </Grid>
+</Window>

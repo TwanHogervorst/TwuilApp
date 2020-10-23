@@ -5,39 +5,53 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
-        Title="ChatWindow" Height="450" Width="800">
+        Title="ChatWindow" Height="450" Width="800" Background="#323232">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" MaxWidth="200"></ColumnDefinition>
             <ColumnDefinition Width="4*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
-            
+        <Grid Grid.Column="0" >
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-                <ItemsControl Name="ChatItemControl">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderBrush="Black" BorderThickness="1">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="20"/>
-                                    </Grid.RowDefinitions>
 
-                                    <TextBlock Padding="5,0,0,0" Grid.Row="0" FontSize="15" FontWeight="SemiBold" Text="{Binding ChatName}" />
-                                    <TextBlock Padding="5,0,0,0" Grid.Row="1" Text="{Binding LastMessage}"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+            <Grid Grid.Row="0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="35"/>
+                    <ColumnDefinition Width="35"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Style="{StaticResource ButtonChatStyle}" Name="AddChatButton" Click="AddChatButton_Click">
+                    <Image Source="pack://application:,,,/Resources/add-group.png"/>
+                </Button>
+
+                <Button Grid.Column="1" Style="{StaticResource ButtonChatStyle}" Name="AddGroupChatButton" Click="AddGroupChatButton_Click">
+                    <Image Source="pack://application:,,,/Resources/add-groupchat.png"/>
+                </Button>
+            </Grid>
+
+            <ListView Grid.Row="1" Name="ChatItemControl" Background="#00000000" HorizontalContentAlignment="Stretch" SelectionChanged="ChatItemControl_SelectionChanged" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="#424649" BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Style="{StaticResource ChatTextBlockStyle}" Text="{Binding ChatName}" />
+                                <TextBlock Grid.Row="1" Padding="5,0,0,0" Foreground="#8d9194" Text="{Binding LastMessage}"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </Grid>
 
         <Grid Grid.Column="1">
@@ -45,31 +59,56 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" FontSize="35" Text="" Padding="10, 0, 0, 0"/>
+                <TextBlock Name="ChatTitleTextBlock" Grid.Row="0" FontSize="35" Foreground="#8d9194" Padding="10, 0, 0, 0"/>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden">
-                    <!-- TODO Show Chat Messages -->
+                <ScrollViewer Name="MessageScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden">
+
+                    <ItemsControl Name="ChatMessagesItemControl" Height="Auto" HorizontalAlignment="Stretch">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="#424649" BorderThickness="1" Width="Auto" Height="Auto" Padding="3">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Foreground="White" FontSize="13" FontWeight="SemiBold" Text="{Binding Sender}" />
+                                        <TextBlock Grid.Row="1" Foreground="White" FontSize="13" Text="{Binding Message}" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    
                 </ScrollViewer>
 
                 <Grid Grid.Row="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="30"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBox Grid.Column="0" Name="ChatTextBox" VerticalContentAlignment="Center" Padding="3" />
-                    <Button Grid.Column="1" Name="SendMessageButton">
+                    <Border  CornerRadius="15" Background="#424649">
+                        <TextBox Grid.Column="0" Grid.Row="0" Style="{StaticResource ChatBoxStyle}" Name="ChatTextBox" KeyUp="ChatTextBox_KeyUp" />
+                    </Border>
+                    
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource ButtonChatStyle}" Name="SendMessageButton" Click="SendMessageButton_Click">
                         <Image Source="pack://application:,,,/Resources/send-arrow.png"/>
                     </Button>
                 </Grid>
 
-                
+
             </Grid>
         </Grid>
     </Grid>
 
-    
+
 </Window>

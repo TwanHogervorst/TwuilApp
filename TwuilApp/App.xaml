@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:TwuilApp"
-             StartupUri="ChatWindow.xaml">
+             StartupUri="LoginWindow.xaml">
     <Application.Resources>
         
         <Style x:Key="LoginWindowStyle" TargetType="Window">
@@ -50,6 +50,12 @@
             <Setter Property="FontSize" Value="22"/>
             <Setter Property="Margin" Value="0,25,0,0"/>
             <Setter Property="Padding" Value="0,0,0,2"/>
+        </Style>
+
+        <Style x:Key="NewChatLabelControlStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#aaa"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
 
         <Style x:Key="InputControlStyle">
@@ -107,8 +113,69 @@
             <Setter Property="Width" Value="350"/>
             <Setter Property="Height" Value="40"/>
         </Style>
-        
-        
-        
+
+        <Style x:Key="ChatBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10, 0, 10, 0"/>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="White" Opacity="0"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="ButtonChatStyle" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Name="border" CornerRadius="15" Background="#424649" Padding="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#8d9194" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ButtonAddUsersStyle" TargetType="Button">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="15" Background="#aaa">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ChatTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#8d9194"/>
+        </Style>
+
+        <Style x:Key="HorizontalScrollViewerStyle" TargetType="ScrollViewer">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Visible"/>
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Width" Value="Auto"/>
+        </Style>
+
     </Application.Resources>
 </Application>

@@ -50,33 +50,36 @@ namespace TwuilAppClient.Core
             this.receiveBuffer = new byte[6];
             this.receivePacketHeader = true;
 
-            this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+            if (this.Connected) this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
         }
 
         internal void Send(DAbstract data)
         {
-            DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+            if(this.Connected)
             {
-                type = data.GetType().Name,
-                data = data
-            };
+                DNetworkPacket<DAbstract> networkPacket = new DNetworkPacket<DAbstract>
+                {
+                    type = data.GetType().Name,
+                    data = data
+                };
 
-            byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
-            this.stream.Write(new byte[]
-            {
+                byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
+                this.stream.Write(new byte[]
+                {
                 0x69
-            });
-            this.stream.Write(BitConverter.GetBytes(buffer.Length));
-            this.stream.Write(new byte[]{
-                new PacketFlags().Result()
-            });
-            this.stream.Write(buffer);
-            this.stream.Write(new byte[]
-            {
+                });
+                this.stream.Write(BitConverter.GetBytes(buffer.Length));
+                this.stream.Write(new byte[]{
+                    new PacketFlags().Result()
+                });
+                this.stream.Write(buffer);
+                this.stream.Write(new byte[]
+                {
                 Utility.CalculateChecksum(buffer)
-            });
+                });
 
-            this.stream.Flush();
+                this.stream.Flush();
+            }
         }
 
         private void OnBytesReceived(IAsyncResult result)
@@ -96,7 +99,7 @@ namespace TwuilAppClient.Core
 
             if (this.receivedBytes < this.receiveBuffer.Length)
             {
-                this.stream.BeginRead(this.receiveBuffer, receivedBytes, this.receiveBuffer.Length - this.receivedBytes, this.OnBytesReceived, null);
+                if (this.Connected) this.stream.BeginRead(this.receiveBuffer, receivedBytes, this.receiveBuffer.Length - this.receivedBytes, this.OnBytesReceived, null);
                 return;
             }
 
@@ -112,7 +115,7 @@ namespace TwuilAppClient.Core
                     this.receiveBuffer = new byte[length + 1];
                     this.receivePacketHeader = false;
 
-                    this.stream.BeginRead(this.receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                    if (this.Connected) this.stream.BeginRead(this.receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
             }
             else
@@ -135,7 +138,7 @@ namespace TwuilAppClient.Core
                     this.receiveBuffer = new byte[6];
                     this.receivePacketHeader = true;
 
-                    this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
+                    if(this.Connected) this.stream.BeginRead(receiveBuffer, 0, receiveBuffer.Length, this.OnBytesReceived, null);
                 }
                 else
                 {
