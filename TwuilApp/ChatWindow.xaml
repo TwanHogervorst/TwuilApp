@@ -45,16 +45,28 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" FontSize="35" Text="Test" Padding="10, 0, 0, 0"/>
+                <TextBlock Grid.Row="0" FontSize="35" Text="" Padding="10, 0, 0, 0"/>
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Visible"  HorizontalScrollBarVisibility="Hidden">
-                    
+                    <!-- TODO Show Chat Messages -->
                 </ScrollViewer>
 
-                <TextBox Grid.Row="2" Name="ChatTextBox"/>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox Grid.Column="0" Name="ChatTextBox" VerticalContentAlignment="Center" Padding="3" />
+                    <Button Grid.Column="1" Name="SendMessageButton">
+                        <Image Source="pack://application:,,,/Resources/send-arrow.png"/>
+                    </Button>
+                </Grid>
+
+                
             </Grid>
         </Grid>
     </Grid>
