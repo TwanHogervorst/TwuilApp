@@ -13,7 +13,7 @@ namespace TwuilAppServer.Core
 
         public bool Contains(ServerClient client) => this.clientList.Contains(client);
 
-        public bool Contains(string username) => this.clientList.FirstOrDefault(client => client.Username == username) != null;
+        public bool UserIsOnline(string username) => this.clientList.FirstOrDefault(client => client.Username == username) != null;
 
         public void Add(ServerClient client)
         {

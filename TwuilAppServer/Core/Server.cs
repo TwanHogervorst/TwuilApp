@@ -10,8 +10,9 @@ namespace TwuilAppServer.Core
 {
     public class Server : IDisposable
     {
-        public ServerClientManager ClientManager { get; }
+        public ServerClientManager ServerClientManager { get; }
         public CredentialsManager CredentialsManager { get; }
+        public ChatManager ChatManager { get; }
 
         private TcpListener listener;
 
@@ -19,8 +20,9 @@ namespace TwuilAppServer.Core
 
         public Server(ushort port)
         {
-            this.ClientManager = new ServerClientManager();
+            this.ServerClientManager = new ServerClientManager();
             this.CredentialsManager = new CredentialsManager(this);
+            this.ChatManager = new ChatManager(this);
 
             this.listener = new TcpListener(IPAddress.Loopback, port);
             this.listener.Start();
@@ -33,17 +35,17 @@ namespace TwuilAppServer.Core
 
             if(client != null && client.Connected)
             {
-                this.ClientManager.Add(new ServerClient(client, this));
+                this.ServerClientManager.Add(new ServerClient(client, this));
             }
 
             this.listener.BeginAcceptTcpClient(this.OnClientAccepted, null);
         }
 
-        public bool UserIsOnline(string username) => this.ClientManager.Contains(username);
+        public bool UserIsOnline(string username) => this.ServerClientManager.UserIsOnline(username);
 
         public bool UserExists(string username) => this.CredentialsManager.UserExists(username);
 
-        public void Broadcast(DAbstract data) => this.SendToClients(this.ClientManager.ClientList, data);
+        public void Broadcast(DAbstract data) => this.SendToClients(this.ServerClientManager.ClientList, data);
 
         public void SendToClients(List<ServerClient> receiverList, DAbstract data)
         {
@@ -70,7 +72,7 @@ namespace TwuilAppServer.Core
 
                 try
                 {
-                    foreach (ServerClient client in this.ClientManager.ClientList)
+                    foreach (ServerClient client in this.ServerClientManager.ClientList)
                         client.Disconnect();
                 }
                 catch (Exception ex)

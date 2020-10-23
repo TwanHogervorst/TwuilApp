@@ -27,5 +27,15 @@ namespace TwuilAppClient.States
             });
         }
 
+        public void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
+        {
+            this.context.Send(new DGroupCreatePacket
+            {
+                groupName = groupName,
+                usersToAdd = usersToAdd,
+                welcomeMessage = welcomeMessage
+            });
+        }
+
     }
 }

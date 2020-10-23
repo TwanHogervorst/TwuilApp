@@ -27,35 +27,26 @@ namespace TwuilAppServer.States
         {
             DPrivateMessageSendResponse response = new DPrivateMessageSendResponse();
 
-            try
-            {
-                if (this.server.ClientManager.TryGetClientByUsername(receiver, out ServerClient clientReceiver))
-                {
-                    if (clientReceiver.Connected)
-                    {
-                        clientReceiver.Send(new DPrivateMessagePacket
-                        {
-                            sender = this.Username,
-                            receiver = receiver,
-                            message = message
-                        });
+            (bool, string) result = this.server.ChatManager.SendPrivate(this.Username, receiver, message);
 
-                        response.status = ResponsePacketStatus.Success;
-                    }
-                }
-                else
-                {
-                    response.status = ResponsePacketStatus.Error;
-                    response.errorMessage = "Receiver not found!";
-                }
-            }
-            catch (Exception ex)
-            {
-                response.status = ResponsePacketStatus.Error;
-                response.errorMessage = "Internal server error";
+            response.status = result.Item1 ? ResponsePacketStatus.Success : ResponsePacketStatus.Error;
+            response.errorMessage = result.Item2;
 
-                Console.WriteLine($"{ex.GetType().Name}: {ex.Message}");
-            }
+            if (result.Item1) Console.WriteLine($"Message from {this.Username} to {receiver}: {message}");
+
+            this.context.Send(response);
+        }
+
+        public void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
+        {
+            DGroupCreateResponsePacket response = new DGroupCreateResponsePacket();
+
+            (bool, string) result = this.server.ChatManager.CreateGroup(groupName, usersToAdd, welcomeMessage);
+
+            response.status = result.Item1 ? ResponsePacketStatus.Success : ResponsePacketStatus.Error;
+            response.errorMessage = result.Item2;
+
+            if (result.Item1) Console.WriteLine($"Group {groupName} created");
 
             this.context.Send(response);
         }

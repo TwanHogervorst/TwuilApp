@@ -23,9 +23,11 @@ namespace TwuilAppClient.Core
         public IClientState State { get; private set; }
 
         public event PrivateMessageReceived OnPrivateMessageReceived;
-        public event LoginResponseReceived OnLoginResponseReceived;
+        public event ServerResponseReceived OnLoginResponseReceived;
         public event ServerClosingReceived OnServerClosing;
-        public event PrivateMessageSendResponseReceived OnPrivateMessageSendResponse;
+        public event ServerResponseReceived OnPrivateMessageSendResponse;
+        public event ServerResponseReceived OnGroupCreatedResponse;
+        public event GroupJoinReceived OnGroupJoin;
 
         private TcpClient client;
         private Stream stream;
@@ -146,6 +148,7 @@ namespace TwuilAppClient.Core
 
             switch (packetRaw.type)
             {
+                // Authentication
                 case nameof(DLoginResponsePacket):
                     {
                         DNetworkPacket<DLoginResponsePacket> packet = packetRaw.DataAsType<DLoginResponsePacket>();
@@ -160,6 +163,7 @@ namespace TwuilAppClient.Core
                         this.OnLoginResponseReceived?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
                     }
                     break;
+                // Private Messages
                 case nameof(DPrivateMessagePacket):
                     {
                         DNetworkPacket<DPrivateMessagePacket> packet = packetRaw.DataAsType<DPrivateMessagePacket>();
@@ -172,6 +176,21 @@ namespace TwuilAppClient.Core
                         DNetworkPacket<DPrivateMessageSendResponse> packet = packetRaw.DataAsType<DPrivateMessageSendResponse>();
 
                         this.OnPrivateMessageSendResponse?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
+                    }
+                    break;
+                // Groups
+                case nameof(DGroupCreateResponsePacket):
+                    {
+                        DNetworkPacket<DGroupCreateResponsePacket> packet = packetRaw.DataAsType<DGroupCreateResponsePacket>();
+
+                        this.OnGroupCreatedResponse?.Invoke(this, packet.data.status == ResponsePacketStatus.Success, packet.data.errorMessage);
+                    }
+                    break;
+                case nameof(DGroupChatJoinPacket):
+                    {
+                        DNetworkPacket<DGroupChatJoinPacket> packet = packetRaw.DataAsType<DGroupChatJoinPacket>();
+
+                        this.OnGroupJoin?.Invoke(this, packet.data.groupName, packet.data.usersInGroup, packet.data.welcomeMessage);
                     }
                     break;
                 case nameof(DServerClosingPacket):
@@ -218,6 +237,11 @@ namespace TwuilAppClient.Core
             if(this.Connected) this.State.SendPrivateMessage(receiver, message);
         }
 
+        public void CreateGroup(string groupName, List<string> usersToAdd, string welcomeMessage)
+        {
+            if (this.Connected) this.State.CreateGroup(groupName, usersToAdd, welcomeMessage);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposed)
@@ -253,8 +277,8 @@ namespace TwuilAppClient.Core
         }
     }
 
-    public delegate void LoginResponseReceived(Client sender, bool success, string errorMessage);
+    public delegate void ServerResponseReceived(Client sender, bool success, string errorMessage);
     public delegate void PrivateMessageReceived(Client sender, string messageSender, string message);
     public delegate void ServerClosingReceived(Client sender, string reason);
-    public delegate void PrivateMessageSendResponseReceived(Client sender, bool success, string errorMessage);
+    public delegate void GroupJoinReceived(Client sender, string groupName, List<string> usersInGroup, string welcomeMessage);
 }
