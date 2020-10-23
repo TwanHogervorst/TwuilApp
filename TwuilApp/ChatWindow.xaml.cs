@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TwuilApp.Core;
 using TwuilApp.Data;
 using TwuilAppClient.Core;
 
@@ -20,9 +22,27 @@ namespace TwuilApp
     public partial class ChatWindow : Window
     {
 
-        private Client client;
+        private DChatItem _currentOpenChat = null;
+        public DChatItem CurrentOpenChat
+        {
+            get
+            {
+                return this._currentOpenChat;
+            }
+            set
+            {
+                this._currentOpenChat = value;
 
-        private bool currentOpenIsGroupChat = false;
+                if(this._currentOpenChat != null)
+                {
+                    this.ChatTitleTextBlock.Text = this._currentOpenChat.ChatName;
+                    this.ChatItemControl.SelectedItem = this._currentOpenChat;
+                }
+            }
+        }
+
+        private Client client;
+        private ChatManager chatManager;
 
         public ChatWindow(Client client)
         {
@@ -30,45 +50,54 @@ namespace TwuilApp
 
             this.client = client;
 
-            List<DChatItem> chatItemList = new List<DChatItem>();
-            this.ChatItemControl.ItemsSource = chatItemList;
+            this.chatManager = new ChatManager(this.client);
+            this.chatManager.OnChatUpdate += ChatManager_OnChatUpdate;
+
+            this.ChatItemControl.ItemsSource = this.chatManager.ChatItems;
 
             // responses from server
             this.client.OnServerClosing += Client_OnServerClosing;
             this.client.OnPrivateMessageSendResponse += Client_OnServerResponse;
             this.client.OnGroupCreatedResponse += Client_OnServerResponse;
             this.client.OnGroupMessageSendResponse += Client_OnServerResponse;
+        }
 
-            // private message
-            this.client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
-
-            // groupchats
-            this.client.OnGroupJoin += Client_OnGroupJoin;
-            this.client.OnGroupMesssageReceived += Client_OnGroupMesssageReceived;
+        private void ChatManager_OnChatUpdate(ChatManager sender, string chatName)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.ChatItemControl.ItemsSource = sender.ChatItems;
+            });
         }
 
         private void Client_OnServerResponse(Client sender, bool success, string errorMessage)
         {
             if(!string.IsNullOrEmpty(errorMessage))
             {
-
+                MessageBox.Show(errorMessage, "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Client_OnServerClosing(Client sender, string reason)
         {
-        }
+            this.Dispatcher.Invoke(() =>
+            {
+                MessageBox.Show(reason, "Server closed", MessageBoxButton.OK, MessageBoxImage.Error);
 
-        private void Client_OnPrivateMessageReceived(Client sender, string messageSender, string message)
-        {
-        }
+                try
+                {
+                    this.client.Dispose();
+                }
+                catch
+                {
 
-        private void Client_OnGroupJoin(Client sender, string groupName, List<string> usersInGroup, string welcomeMessage)
-        {
-        }
+                }
 
-        private void Client_OnGroupMesssageReceived(Client sender, string messageSender, string groupName, string message)
-        {
+                LoginWindow loginWindow = new LoginWindow();
+                loginWindow.Show();
+
+                this.Close();
+            });
         }
 
         private void SendMessageButton_Click(object sender, RoutedEventArgs e)
@@ -83,15 +112,60 @@ namespace TwuilApp
 
         private void SendMessage()
         {
-            string message = this.ChatTextBox.Text;
-            string receiver = "test"; // todo
+            if(this.CurrentOpenChat != null)
+            {
+                string message = this.ChatTextBox.Text;
+                string receiver = this.CurrentOpenChat.ChatName;
 
-            if (message.EndsWith(Environment.NewLine)) message = message.Substring(0, message.Length - Environment.NewLine.Length);
+                if (message.EndsWith(Environment.NewLine)) message = message.Substring(0, message.Length - Environment.NewLine.Length);
 
-            if (this.currentOpenIsGroupChat) this.client.SendGroupMessage(receiver, message);
-            else this.client.SendPrivateMessage(receiver, message);
+                if (this.CurrentOpenChat.IsGroup) this.chatManager.SendGroupMessage(receiver, message);
+                else this.chatManager.SendPrivateMessage(receiver, message);
 
-            this.ChatTextBox.Text = "";
+                this.ChatTextBox.Text = "";
+            }
+        }
+
+        private void AddChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddNewChatWindow newChatDialog = new AddNewChatWindow();
+            bool? result = newChatDialog.ShowDialog().HasValue;
+
+            if (newChatDialog.Result)
+            {
+                string username = newChatDialog.UserTextBox.Text;
+
+                DChatItem chat = this.chatManager.CreatePrivateChat(username);
+                this.CurrentOpenChat = chat;
+            }
+        }
+
+        private void AddGroupChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            AddNewGroupchatWindow newGroupusersWindow = new AddNewGroupchatWindow(this.chatManager.ChatUsernames);
+            newGroupusersWindow.ShowDialog();
+
+            if(newGroupusersWindow.UsernameListView.SelectedItems.Count > 0)
+            {
+                List<string> usersToAdd = newGroupusersWindow.UsernameListView.SelectedItems
+                    .OfType<string>()
+                    .ToList();
+
+                if (!usersToAdd.Contains(this.client.Username)) usersToAdd.Add(this.client.Username);
+
+                MakeNewGroupchatWindow newGroupWindow = new MakeNewGroupchatWindow(usersToAdd);
+                newGroupWindow.ShowDialog();
+
+                if(newGroupWindow.Result)
+                {
+                    this.client.CreateGroup(newGroupWindow.GroupNameTextBox.Text, usersToAdd, $"{this.client.Username} created the group {newGroupWindow.GroupNameTextBox.Text}");
+                }
+            }
+        }
+
+        private void ChatItemControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.CurrentOpenChat = (DChatItem)this.ChatItemControl.SelectedItem;
         }
     }
 }

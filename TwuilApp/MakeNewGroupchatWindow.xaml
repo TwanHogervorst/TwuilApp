@@ -18,9 +18,6 @@
 
         <TextBlock Grid.Row="0" Style="{StaticResource NewChatLabelControlStyle}">Groupname:</TextBlock>
 
-
-        <ScrollViewer Grid.Row="3" Name="AllUsersList"/>
-
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30*"/>
@@ -31,11 +28,13 @@
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Height="30" Style="{StaticResource ChatBoxStyle}" Name="AddedUsersList"/>
-            <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddGroupButton" Grid.RowSpan="2">
+            <TextBox Grid.Column="0" Height="30" Style="{StaticResource InputControlStyle}" Name="GroupNameTextBox"/>
+            <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddGroupButton" Grid.RowSpan="2" Click="AddGroupButton_Click">
                 <Image Source="pack://application:,,,/Resources/send-arrow.png" Height="38" RenderTransformOrigin="0.556,0.173"/>
             </Button>
         </Grid>
+        
+        <ListView Grid.Row="2" Name="UsernameListView" Foreground="White" Background="#00000000" HorizontalContentAlignment="Stretch" />
 
     </Grid>
 </Window>

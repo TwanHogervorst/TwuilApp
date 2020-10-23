@@ -125,8 +125,11 @@ namespace TwuilAppServer.Core
                             // jammer dan
                         }
 
-                        string invalidUsersString = string.Join(", ", invalidUserList);
-                        errorMessage = $"Group created but couldn't add the following users: {invalidUsersString}";
+                        if(invalidUserList.Count > 0)
+                        {
+                            string invalidUsersString = string.Join(", ", invalidUserList);
+                            errorMessage = $"Group created but couldn't add the following users: {invalidUsersString}";
+                        }
                     }
                     else
                     {

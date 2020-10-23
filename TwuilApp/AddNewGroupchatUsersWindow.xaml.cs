@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,9 +18,25 @@ namespace TwuilApp
     /// </summary>
     public partial class AddNewGroupchatWindow : Window
     {
-        public AddNewGroupchatWindow()
+
+        public AddNewGroupchatWindow(List<string> usernameList)
         {
             InitializeComponent();
+
+            this.UsernameListView.ItemsSource = usernameList;
+        }
+
+        private void AddUsersButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(this.UsernameListView.SelectedItems.Count == 0)
+            {
+                MessageBoxResult result = MessageBox.Show("Please selected minimal 1 username.", "Select user", MessageBoxButton.OKCancel, MessageBoxImage.Information);
+                if (result == MessageBoxResult.Cancel) this.Close();
+            } 
+            else
+            {
+                this.Close();
+            }
         }
     }
 }

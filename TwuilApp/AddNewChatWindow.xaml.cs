@@ -17,9 +17,22 @@ namespace TwuilApp
     /// </summary>
     public partial class AddNewChatWindow : Window
     {
+
+        public bool Result { get; private set; } = false;
+
         public AddNewChatWindow()
         {
             InitializeComponent();
+        }
+
+        private void AddNewChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.UserTextBox.Text)) this.Result = true;
+            this.Close();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
         }
     }
 }

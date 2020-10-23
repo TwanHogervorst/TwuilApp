@@ -17,9 +17,20 @@ namespace TwuilApp
     /// </summary>
     public partial class MakeNewGroupchatWindow : Window
     {
-        public MakeNewGroupchatWindow()
+
+        public bool Result { get; private set; } = false;
+
+        public MakeNewGroupchatWindow(List<string> usernames)
         {
             InitializeComponent();
+
+            this.UsernameListView.ItemsSource = usernames;
+        }
+
+        private void AddGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(this.GroupNameTextBox.Text)) this.Result = true;
+            this.Close();
         }
     }
 }

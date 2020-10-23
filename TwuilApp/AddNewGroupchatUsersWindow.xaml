@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
         Title="New Group" Height="500" Width="250"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         Style="{StaticResource LoginWindowStyle}"
         ResizeMode="NoResize">
     
@@ -20,9 +20,7 @@
 
         <TextBlock Grid.Row="0" Style="{StaticResource NewChatLabelControlStyle}">ADD USERS</TextBlock>
 
-        <ScrollViewer Grid.Row="1" Style="{StaticResource HorizontalScrollViewerStyle}" Name="AddedUsersList"/>
-
-        <ScrollViewer Grid.Row="2" Name="AllUsersList"/>
+        <ListView Grid.Row="2" Name="UsernameListView" Background="#00000000" HorizontalContentAlignment="Stretch" SelectionMode="Multiple" />
 
         <Grid Grid.Row="3">
             <Grid.RowDefinitions>
@@ -33,7 +31,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddUsersButton" Grid.RowSpan="2">
+            <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddUsersButton" Grid.RowSpan="2" Click="AddUsersButton_Click">
                 <Image Source="pack://application:,,,/Resources/send-arrow.png" Height="38" RenderTransformOrigin="0.556,0.173"/>
             </Button>
         </Grid>
