@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Controls;
 using TwuilApp.Data;
@@ -32,9 +34,43 @@ namespace TwuilApp.Core
         private Dictionary<string, DChatItem> chatByUsername = new Dictionary<string, DChatItem>();
         private Dictionary<string, DChatItem> groupByGroupName = new Dictionary<string, DChatItem>();
 
+        private object writeLock = new object();
+
         public ChatManager(Client client)
         {
             this.client = client;
+
+            FileInfo userPrivateChatDb = new FileInfo("chatdb/" + this.client.Username + "_private.json");
+            if (userPrivateChatDb.Exists)
+            {
+                try
+                {
+                    using (StreamReader reader = userPrivateChatDb.OpenText())
+                    {
+                        this.chatByUsername = JsonConvert.DeserializeObject<Dictionary<string, DChatItem>>(reader.ReadToEnd());
+                    }
+                }
+                catch
+                {
+                    // jammer dan
+                }
+            }
+
+            FileInfo userGroupChatDb = new FileInfo("chatdb/" + this.client.Username + "_group.json");
+            if (userGroupChatDb.Exists)
+            {
+                try
+                {
+                    using (StreamReader reader = userGroupChatDb.OpenText())
+                    {
+                        this.groupByGroupName = JsonConvert.DeserializeObject<Dictionary<string, DChatItem>>(reader.ReadToEnd());
+                    }
+                }
+                catch
+                {
+                    // jammer dan
+                }
+            }
 
             this.client.OnPrivateMessageReceived += Client_OnPrivateMessageReceived;
 
@@ -50,6 +86,8 @@ namespace TwuilApp.Core
 
             chat.Messages.Add(new DChatMessage { Sender = messageSender, Message = message });
             this.OnChatUpdate?.Invoke(this, messageSender);
+
+            this.Save();
         }
 
         private void Client_OnGroupMesssageReceived(Client sender, string messageSender, string groupName, string message)
@@ -60,6 +98,8 @@ namespace TwuilApp.Core
 
             chat.Messages.Add(new DChatMessage { Sender = messageSender, Message = message });
             this.OnChatUpdate?.Invoke(this, groupName);
+
+            this.Save();
         }
 
         private void Client_OnGroupJoin(Client sender, string groupName, List<string> usersInGroup, string welcomeMessage)
@@ -70,6 +110,8 @@ namespace TwuilApp.Core
 
             chat.Messages.Add(new DChatMessage { Message = welcomeMessage });
             this.OnChatUpdate?.Invoke(this, groupName);
+
+            this.Save();
         }
 
         public DChatItem GetPrivateChat(string username)
@@ -100,6 +142,8 @@ namespace TwuilApp.Core
 
             chat.Messages.Add(new DChatMessage { Sender = this.client.Username, Message = message });
             this.OnChatUpdate?.Invoke(this, username);
+
+            this.Save();
         }
 
         public void SendGroupMessage(string groupName, string message)
@@ -112,6 +156,8 @@ namespace TwuilApp.Core
 
             chat.Messages.Add(new DChatMessage { Sender = this.client.Username, Message = message });
             this.OnChatUpdate?.Invoke(this, groupName);
+
+            this.Save();
         }
 
         public DChatItem CreatePrivateChat(string username)
@@ -122,7 +168,36 @@ namespace TwuilApp.Core
 
             this.OnChatUpdate?.Invoke(this, username);
 
+            this.Save();
+
             return chat;
+        }
+
+        private void Save()
+        {
+            try
+            {
+                lock(this.writeLock)
+                {
+                    if (!Directory.Exists("chatdb")) Directory.CreateDirectory("chatdb");
+
+                    using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_private.json", FileMode.Create, FileAccess.Write)))
+                    {
+                        writer.WriteLine(JsonConvert.SerializeObject(this.chatByUsername));
+                        writer.Flush();
+                    }
+
+                    using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_group.json", FileMode.Create, FileAccess.Write)))
+                    {
+                        writer.WriteLine(JsonConvert.SerializeObject(this.groupByGroupName));
+                        writer.Flush();
+                    }
+                }
+            }
+            catch
+            {
+                // jammer dan
+            }
         }
     }
 
