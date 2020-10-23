@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TwuilApp"
         mc:Ignorable="d"
         Title="New Group" Height="560" Width="400"
-        WindowStartupLocation="CenterScreen"
+        WindowStartupLocation="CenterOwner"
         Style="{StaticResource LoginWindowStyle}"
         ResizeMode="NoResize">
     <Grid HorizontalAlignment="Center" Width="250" Margin="20">

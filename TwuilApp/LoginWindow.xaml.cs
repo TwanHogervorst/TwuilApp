@@ -172,5 +172,10 @@ namespace TwuilApp
                 this.ErrorMessageLabel.Visibility = Visibility.Visible;
             });
         }
+
+        private void PasswordTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter) this.SignInButton_Click(this, new RoutedEventArgs());
+        }
     }
 }

@@ -41,7 +41,7 @@
         
         <TextBlock Grid.Row="7" Style="{StaticResource LabelControlStyle}">PASSWORD</TextBlock>
 
-        <PasswordBox Grid.Row="8" Style="{StaticResource InputControlStyle}" Name="PasswordTextBox"></PasswordBox>
+        <PasswordBox Grid.Row="8" Style="{StaticResource InputControlStyle}" Name="PasswordTextBox" KeyUp="PasswordTextBox_KeyUp"></PasswordBox>
 
         <Button Grid.Row="9" Style="{StaticResource ButtonSignStyle}" Name="SignInButton" Click="SignInButton_Click">SIGN IN</Button>
 

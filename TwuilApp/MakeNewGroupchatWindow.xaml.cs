@@ -32,5 +32,10 @@ namespace TwuilApp
             if (!string.IsNullOrEmpty(this.GroupNameTextBox.Text)) this.Result = true;
             this.Close();
         }
+
+        private void GroupNameTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) this.AddGroupButton_Click(this, new RoutedEventArgs());
+        }
     }
 }

@@ -34,5 +34,10 @@ namespace TwuilApp
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
         }
+
+        private void UserTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter) this.AddNewChatButton_Click(this, new RoutedEventArgs());
+        }
     }
 }
