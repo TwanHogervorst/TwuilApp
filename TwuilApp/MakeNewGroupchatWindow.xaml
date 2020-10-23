@@ -20,15 +20,17 @@
 
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="30*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
 
-            <TextBox Grid.Column="0" Height="30" Style="{StaticResource InputControlStyle}" Name="GroupNameTextBox"/>
+            <Border  CornerRadius="15" Background="#424649">
+                <TextBox Grid.Column="0" Grid.Row="0" Height="30" Style="{StaticResource ChatBoxStyle}" Name="GroupNameTextBox"/>
+            </Border>
+
             <Button Grid.Column="1" Style="{StaticResource ButtonAddUsersStyle}" Name="AddGroupButton" Grid.RowSpan="2" Click="AddGroupButton_Click">
                 <Image Source="pack://application:,,,/Resources/send-arrow.png" Height="38" RenderTransformOrigin="0.556,0.173"/>
             </Button>

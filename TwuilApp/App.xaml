@@ -176,6 +176,8 @@
             <Setter Property="VerticalScrollBarVisibility" Value="Disabled"/>
             <Setter Property="Width" Value="Auto"/>
         </Style>
+        
+        
 
     </Application.Resources>
 </Application>
