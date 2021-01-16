@@ -73,7 +73,7 @@ namespace TwuilAppServer.Core
                 data = data
             };
 
-            byte[] buffer = Encoding.ASCII.GetBytes(networkPacket.ToJson());
+            byte[] buffer = Encoding.Unicode.GetBytes(networkPacket.ToJson());
             this.stream.Write(new byte[]
             {
                 0x69
@@ -156,7 +156,7 @@ namespace TwuilAppServer.Core
                 {
                     try
                     {
-                        this.OnDataReceived(JsonConvert.DeserializeObject<DNetworkPacket>(Encoding.UTF8.GetString(messageBytes)));
+                        this.OnDataReceived(JsonConvert.DeserializeObject<DNetworkPacket>(Encoding.Unicode.GetString(messageBytes)));
                     }
                     catch (Exception ex)
                     {
