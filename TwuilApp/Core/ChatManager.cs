@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Controls;
 using TwuilApp.Data;
 using TwuilAppClient.Core;
@@ -45,7 +46,7 @@ namespace TwuilApp.Core
             {
                 try
                 {
-                    using (StreamReader reader = userPrivateChatDb.OpenText())
+                    using (StreamReader reader = new StreamReader(userPrivateChatDb.Open(FileMode.Open, FileAccess.Read), Encoding.Unicode))
                     {
                         this.chatByUsername = JsonConvert.DeserializeObject<Dictionary<string, DChatItem>>(reader.ReadToEnd());
                     }
@@ -61,7 +62,7 @@ namespace TwuilApp.Core
             {
                 try
                 {
-                    using (StreamReader reader = userGroupChatDb.OpenText())
+                    using (StreamReader reader = new StreamReader(userGroupChatDb.Open(FileMode.Open, FileAccess.Read), Encoding.Unicode))
                     {
                         this.groupByGroupName = JsonConvert.DeserializeObject<Dictionary<string, DChatItem>>(reader.ReadToEnd());
                     }
@@ -177,22 +178,33 @@ namespace TwuilApp.Core
         {
             try
             {
-                lock(this.writeLock)
+                new Thread(() =>
                 {
-                    if (!Directory.Exists("chatdb")) Directory.CreateDirectory("chatdb");
-
-                    using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_private.json", FileMode.Create, FileAccess.Write)))
+                    try
                     {
-                        writer.WriteLine(JsonConvert.SerializeObject(this.chatByUsername));
-                        writer.Flush();
-                    }
+                        lock (this.writeLock)
+                        {
+                            if (!Directory.Exists("chatdb")) Directory.CreateDirectory("chatdb");
 
-                    using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_group.json", FileMode.Create, FileAccess.Write)))
-                    {
-                        writer.WriteLine(JsonConvert.SerializeObject(this.groupByGroupName));
-                        writer.Flush();
+                            using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_private.json", FileMode.Create, FileAccess.Write), Encoding.Unicode))
+                            {
+                                writer.WriteLine(JsonConvert.SerializeObject(this.chatByUsername));
+                                writer.Flush();
+                            }
+
+                            using (StreamWriter writer = new StreamWriter(new FileStream("chatdb/" + this.client.Username + "_group.json", FileMode.Create, FileAccess.Write), Encoding.Unicode))
+                            {
+                                writer.WriteLine(JsonConvert.SerializeObject(this.groupByGroupName));
+                                writer.Flush();
+                            }
+                        }
                     }
-                }
+                    catch
+                    {
+                        // jammer dan
+                    }
+                }).Start();
+                
             }
             catch
             {
