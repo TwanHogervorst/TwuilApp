@@ -14,22 +14,29 @@ namespace TwuilAppLib.Data
         public PacketFlags(byte flagByte)
         {
             this.flagByte = flagByte;
+        }
 
-            // defaults
-            this.IsEncrypted = false;
+        public PacketFlags(bool defaults)
+        {
+            this.flagByte = 0;
+
+            if (defaults)
+            {
+                this.IsEncrypted = false;
+            }
         }
 
         public bool IsEncrypted
         {
-            get => (flagByte & (0x1 << 0)) > 0;
+            get => (this.flagByte & (0x1 << 0)) > 0;
             set
             {
-                if (value) flagByte |= (0x1 << 0);
-                else flagByte &= 0xFF ^ (0x1 << 0);
+                if (value) this.flagByte |= (0x1 << 0);
+                else this.flagByte &= 0xFF ^ (0x1 << 0);
             }
         }
 
-        public byte Result() => flagByte;
+        public byte Result() => this.flagByte;
     }
 
     public class DNetworkPacket : DAbstract
