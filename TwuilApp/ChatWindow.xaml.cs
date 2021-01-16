@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using TwuilApp.Core;
 using TwuilApp.Data;
 using TwuilAppClient.Core;
+using System.Media;
 
 namespace TwuilApp
 {
@@ -126,6 +127,21 @@ namespace TwuilApp
 
                 if (this.CurrentOpenChat.IsGroup) this.chatManager.SendGroupMessage(receiver, message);
                 else this.chatManager.SendPrivateMessage(receiver, message);
+
+                if (message.Equals("🐱‍👤"))
+                {
+                    
+                    WMPLib.WindowsMediaPlayer wplayer = new WMPLib.WindowsMediaPlayer();
+                    wplayer.URL = Environment.CurrentDirectory + "/i-want-to-be-ninja.mp3";
+                    wplayer.controls.play();
+                    wplayer.PlayStateChange += (newState) =>
+                    {
+                        if ((WMPLib.WMPPlayState)newState == WMPLib.WMPPlayState.wmppsStopped)
+                        {
+                            wplayer.close();
+                        }
+                    };
+                }
 
                 this.ChatTextBox.Text = "";
             }
