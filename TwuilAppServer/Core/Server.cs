@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using TwuilAppLib.Data;
+using TwuilAppServer.Interface;
 
 namespace TwuilAppServer.Core
 {
-    public class Server : IDisposable
+    public class Server : IDisposable, IServer
     {
-        public ServerClientManager ServerClientManager { get; }
-        public CredentialsManager CredentialsManager { get; }
-        public ChatManager ChatManager { get; }
+        public IServerClientManager ServerClientManager { get; }
+        public ICredentialsManager CredentialsManager { get; }
+        public IChatManager ChatManager { get; }
 
         private TcpListener listener;
 

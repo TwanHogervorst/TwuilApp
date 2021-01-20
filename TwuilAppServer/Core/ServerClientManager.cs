@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TwuilAppServer.Interface;
 
 namespace TwuilAppServer.Core
 {
-    public class ServerClientManager
+    public class ServerClientManager : IServerClientManager
     {
 
         private List<ServerClient> clientList = new List<ServerClient>();

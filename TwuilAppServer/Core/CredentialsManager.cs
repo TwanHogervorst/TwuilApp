@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
+using TwuilAppServer.Interface;
 
 namespace TwuilAppServer.Core
 {
-    public class CredentialsManager
+    public class CredentialsManager : ICredentialsManager
     {
-        private Server server;
+        private IServer server;
 
         private Dictionary<string, string> credentials = new Dictionary<string, string>();
 
         private object writeLock = new object();
 
-        public CredentialsManager(Server server)
+        public CredentialsManager(IServer server)
         {
             this.server = server;
 

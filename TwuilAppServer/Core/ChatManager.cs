@@ -6,18 +6,19 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using TwuilAppLib.Data;
+using TwuilAppServer.Interface;
 
 namespace TwuilAppServer.Core
 {
-    public class ChatManager
+    public class ChatManager : IChatManager
     {
-        private Server server;
+        private IServer server;
 
         private Dictionary<string, List<string>> usersByGroupname = new Dictionary<string, List<string>>();
 
         private object writeLock = new object();
 
-        public ChatManager(Server server)
+        public ChatManager(IServer server)
         {
             this.server = server;
 
